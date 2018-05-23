@@ -1,0 +1,7 @@
+/* pages/index/login_panel.wxss */
+
+@import "../blind/scan_blind.wxss"
+.title {
+  margin-top: 20%;
+  text-align: center;
+}

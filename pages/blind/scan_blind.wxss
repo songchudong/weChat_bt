@@ -1,0 +1,45 @@
+/* pages/blind/scan.wxss */
+
+.btn {
+  background: #20a53a;
+  color: #fff;
+  width: 420rpx;
+  height: 100rpx;
+  text-align: center;
+  /* line-height: 100rpx; */
+  margin: 15% auto;
+  border-radius: 50rpx;
+  /* vertical-align: middle; */
+}
+
+.btn image {
+  width: 40rpx;
+  height: 40rpx;
+  vertical-align: middle;
+  margin-right: 25rpx;
+  margin-top: 2rpx;
+}
+
+.btn text{
+  font-size: 40rpx;
+  vertical-align: middle; 
+  line-height: 100rpx;
+  display: inline-block；
+}
+
+.describe {
+  margin: 10% 0 0 10%;
+}
+
+.describe text:nth-child(1) {
+  font-size: 40rpx;
+  font-weight: 500;
+}
+
+.describe text:nth-child(2) {
+  font-size: 32rpx;
+  line-height: 80rpx;
+  color: #404040;
+  position:relative;
+  top:-20px;
+}

@@ -1,0 +1,22 @@
+<!--pages/server/login.wxml-->
+<loading hidden="{{hiddenLoading}}">正在登录中</loading>
+<view class='login_title'>绑定宝塔官网账号</view>
+<view class='login_form'>
+  <form bindsubmit="formSubmit">
+    <view class='login_input_list'>
+      <label class='login_label'>
+        <image src='/img/logo/login_user.png'></image>
+      </label>
+      <input class='login_input' name='username' maxlength="11" bindinput="userinput" type="number" value='{{username}}' placeholder="手机号码" placeholder-style="font-size:30rpx;" />
+      <icon bindtap="resetName" wx:if="{{ username }}" class='login_icon' type="clear" size="20" />
+    </view>
+    <view class='login_input_list'>
+      <label class='login_label'>
+        <image style='width:45rpx;height:45rpx;' src='/img/logo/login_pw.png'></image>
+      </label>
+      <input class='login_input' name='password' bindinput='pwinput' password placeholder="密码" value='{{password}}' placeholder-style="font-size:30rpx;" />
+      <icon bindtap="resetPwd" wx:if="{{ password }}" class='login_icon' type="clear" size="20" />
+    </view>
+    <button form-type='submit' open-type="getUserInfo" type='primary'>登录</button>
+  </form>
+</view>

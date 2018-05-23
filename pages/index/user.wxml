@@ -1,0 +1,21 @@
+<!--pages/user.wxml-->
+<view class="head">
+  <view class="head-body">
+    <view class='user_icon'>
+      <image class="userinfo-avatar" src='{{ userInfo.wx_info.avatarUrl }}'></image>
+    </view>
+  </view>
+  <view class='head-user'>
+    <view class='list'>
+      <text style='color:#fff'>{{ userInfo.bt_info.bt_username}}</text>
+    </view>
+    <view class='list'>
+      <text style='color:#e0e0e0; '>{{ userInfo.wx_info.nickName}}</text>
+    </view>
+  </view>
+  <view class='head-retrun'>
+    <view bindtap="navigateToLogin">
+      <image class="return-icon" src='/img/logo/return.png'></image>
+    </view>
+  </view>
+</view>

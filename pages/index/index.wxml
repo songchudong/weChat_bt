@@ -1,0 +1,54 @@
+<!--pages/index.wxml-->
+<wxs module="filters" src="../../filter/common.wxs"></wxs>
+
+<progress percent="{{percent}}" stroke-width="3" color="#20a53a" active='{{ percent == 100 ? false:true}}' />
+
+<view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove" wx:for="{{serverList}}" wx:key="sid">
+  <view class='content'>
+    <view class='server_box' bindtap="navigateToDetail" data-id='{{ item.sid }}' data-status='{{ item.state }}'>
+      <view class='server_list'>
+        <view class='list'>
+          <view class='list_title'>
+            <view class='list_name'>{{item.info ? item.info.title : '宝塔Linux面板'}}</view>
+            <view class='list_state' style="{{item.state == 1 ? 'background-color:#20a53a' : 'background-color:#f00'}}">{{item.state == 1 ? '运行中' : '已关闭'}}</view>
+          </view>
+          <view class='list_oper' wx:if='{{item.state == 1}}'>已稳定运行：{{item.info.time? filters.replaceStr(item.info.time): '0 分'}}</view>
+        </view>
+        <view class='list'>IP地址：{{item.address}}</view>
+        <view class='list' wx:if="{{item.state != 2}}">
+          <view class='state_group'>
+            <image class='icon' src="{{ item.state == 1 ? filters.GetLoadColor(item.info.load_average.one, item.info.load_average.limit)[0] : '/img/logo/load.png' }}"></image>
+            <view class='title' style="{{ item.state == 1 ? filters.GetLoadColor(item.info.load_average.one, item.info.load_average.limit)[1]: 'color:#6b6b6b' }}">负载 {{filters.proKeepADecimal(item.info.load_average.one, item.info.load_average.limit)}}%</view>
+          </view>
+          <view class='state_group'>
+            <image class='icon' src="{{ item.state == 1 ? '/img/logo/up_active.png' : '/img/logo/up.png'}}"></image>
+            <view class='title'>上行 {{ filters.KeepADecimal(item.info.network.up) }}</view>
+          </view>
+          <view class='state_group'>
+            <image class='icon' src="{{ item.state == 1 ? '/img/logo/down_active.png': '/img/logo/down.png'}}"></image>
+            <view class='title'>下行 {{ filters.KeepADecimal(item.info.network.down) }}</view>
+          </view>
+        </view>
+        <view class='list' style='font-size:26rpx;color：#20a53a;' wx:elif="{{item.state == 2}}">提示:当前绑定面板未开通高级功能。</view>
+      </view>
+    </view>
+    <view class='btn_group' wx:if="{{item.SshInfo && item.state != 2}}">
+      <view class='btn_item' bind:tap='close_panel' data-index='{{index}}'>
+        <text wx:if="{{item.panel}}">开启面板</text>
+        <text wx:else>关闭面版</text>
+      </view>
+      <view class='btn_item' bind:tap='set_ssh' data-index='{{index}}'>
+        <text wx:if="{{item.SshInfo.status}}">关闭SSH</text>
+        <text wx:else>启用SSH</text>
+      </view>
+      <view class='btn_item' bind:tap='set_ping' data-index='{{index}}'>
+        <text wx:if="{{item.SshInfo.ping}}">禁用PING</text>
+        <text wx:else>启用PING</text>
+      </view>
+    </view>
+  </view>
+  <view class="del" catchtap="del_server" data-index="{{index}}">删除</view>
+</view>
+<view class='addView'>
+  <icon bindtap="add_server" mode='aspectFill' color='#20a53a' class='btn_add' type="clear" size="40" />
+</view>

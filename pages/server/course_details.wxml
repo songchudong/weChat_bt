@@ -1,0 +1,76 @@
+<wxs module="filters" src="../../filter/common.wxs"></wxs>
+
+<view class='list_box'>
+  <view class='box_title'>进程属性[{{course_info.name}}] -- {{course_info.exe}}</view>
+  <view class="box_conter">
+    <view class='par_list'><view class='par_name'>名称</view><view class='par_data'>{{course_info.name}}</view></view>
+      <view class='par_list'><view class='par_name'>PID</view><view class='par_data'>{{course_info.pid}}</view></view>
+      <view class='par_list'><view class='par_name'>状态</view><view class='par_data'>{{course_info.status}}</view></view>
+      <view class='par_list'><view class='par_name'>父进程</view><view class='par_data'>{{course_info.pname + '('+ course_info.ppid +')'}}</view></view>
+      <view class='par_list'><view class='par_name'>用户</view><view class='par_data'>{{course_info.user}}</view></view>
+      <view class='par_list'><view class='par_name'>线程</view><view class='par_data'>{{course_info.threads}}</view></view>
+      <view class='par_list'><view class='par_name'>Socket</view><view class='par_data'>{{course_info.connects}}</view></view>
+      <view class='par_list'><view class='par_name'>IO读</view><view class='par_data'>{{filters.formaTunit(course_info.io_read_bytes)}}</view></view>
+      <view class='par_list'><view class='par_name'>IO写</view><view class='par_data'>{{filters.formaTunit(course_info.io_write_bytes)}}</view></view>
+      <view class='par_list'><view class='par_name'>启动时间</view><view class='par_data'>{{filters.getDate(course_info.create_time,'YY-MM-DD hh:mm:ss')}}</view></view>
+      <view class='par_list'><view class='par_name'>描述</view><view class='par_data'>{{course_info.ps}}</view></view>
+  </view>
+</view>
+
+<view class='list_box'>
+  <view class='box_title'>启动命令</view>
+  <view class="box_conter">
+    <view class='par_list'>{{course_info.comline}}</view>
+  </view>
+</view>
+
+<view class='list_box'>
+  <view class='box_title'>内存</view>
+  <view class="box_conter">
+    <view class='par_list'><view class='par_name'>rss</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.rss)}}</view></view>
+      <view class='par_list'><view class='par_name'>pss</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.pss)}}</view></view>
+      <view class='par_list'><view class='par_name'>uss</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.uss)}}</view></view>
+      <view class='par_list'><view class='par_name'>vms</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.vms)}}</view></view>
+      <view class='par_list'><view class='par_name'>swap</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.swap)}}</view></view>
+      <view class='par_list'><view class='par_name'>shared</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.shared)}}</view></view>
+      <view class='par_list'><view class='par_name'>data</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.data)}}</view></view>
+      <view class='par_list'><view class='par_name'>text</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.text)}}</view></view>
+      <view class='par_list'><view class='par_name'>dirty</view><view class='par_data'>{{filters.formaTunit(course_info.memory_full.dirty)}}</view></view>
+  </view>
+</view>
+
+<view class='list_box'>
+  <view class='box_title'>打开文件目录</view>
+  <view class="box_table table">
+    <view class='table_tr_left'>
+    <view class='table_header'>
+      <view class='table_tr'>
+        <view class='table_td'>文件</view>
+      </view>
+    </view>
+    <view class='table_body'>
+      <view wx:for="{{course_info.open_files}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
+        <view class='table_td'>{{item.path}}</view>
+      </view>
+    </view>
+  </view>
+  <scroll-view class='table_tr_right' scroll-x="true">
+    <view class='table_header'>
+      <view class='table_tr'>
+        <view class='table_td'>mode</view>
+        <view class='table_td'>postition</view>
+        <view class='table_td'>flags</view>
+        <view class='table_td'>fd</view>
+      </view>
+    </view>
+    <view class='table_body'>
+      <view wx:for="{{course_info.open_files}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
+        <view class='table_td'>{{item.mode}}</view>
+        <view class='table_td'>{{item.position}}</view>
+        <view class='table_td'>{{item.flags}}</view>
+        <view class='table_td'>{{item.fd}}</view>
+      </view>
+    </view>
+  </scroll-view>
+  </view>
+</view>

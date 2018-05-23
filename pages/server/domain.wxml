@@ -1,0 +1,22 @@
+<!-- /pages/server/domain.wxml -->
+
+<view class="form_box" >
+  <form bindsubmit="add_domain" bindreset="formReset">
+    <view class='input_form'>
+      <input name="name" placeholder="域名" value='{{domain_info}}' placeholder-class="input_placeholder"/>
+    </view>
+    <view class='input_form'>
+      <input name="port" placeholder="端口默认为80端口,可无需填写" value='{{domain_info}}' placeholder-class="input_placeholder"/>
+    </view>
+    <view class='button_form'>
+      <button formType="submit">添加域名</button>
+    </view>
+  </form>
+</view>
+<view class='domain_list_title'>域名列表</view>
+<view class='domain_box'>
+  <view wx:for="{{domain_list}}" wx:key="index" class='list_item'>
+    <text>{{item.name + ' : ' + item.port}}</text>
+    <view class='del_item' bindtap='del_domain' data-index="{{index}}">删除</view>
+  </view>
+</view>

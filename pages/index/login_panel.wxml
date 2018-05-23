@@ -1,0 +1,15 @@
+<!--pages/login_panel.wxml-->
+
+<view class='title' wx:if="{{loginS}}">
+  <view>
+    <icon type="success" size="80" />
+  </view>
+  <view style='margin:5% 0 10%;'>
+    <text>登录成功</text>
+  </view>
+  <button type='primary' bindtap='goHome' style='width:80%'>点击返回首页</button>
+</view>
+<view wx:else>
+  <import src="../blind/scan_blind.wxml" />
+  <template is="scan" />
+</view>

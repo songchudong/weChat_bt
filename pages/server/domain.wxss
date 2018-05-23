@@ -1,0 +1,76 @@
+.input_form {
+  background: #fff;
+  height: 90rpx;
+  line-height: 90rpx;
+  padding: 0 20rpx;
+}
+
+.input_form input {
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #fff;
+  border-top: 2rpx solid #999;
+}
+
+/* .input_form input:focus {
+  color: #666;
+  font-size: 34rpx;
+} */
+
+.input_form:first-child input {
+  border-top: none;
+}
+
+.input_placeholder {
+  color: #666;
+  font-size: 34rpx;
+}
+
+.button_form {
+  margin: 40rpx 25rpx;
+}
+
+.button_form button {
+  background: #20a53a;
+  color: #fff;
+}
+
+.domain_list_title {
+  font-size: 32rpx;
+  color: #999;
+  margin: 15rpx 25rpx;
+}
+
+.domain_box {
+  background: #fff;
+  padding: 0 25rpx;
+}
+
+.domain_box .list_item {
+  height: 100rpx;
+  line-height: 100rpx;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #cecece;
+}
+
+.domain_box .list_item:last-child {
+  border-bottom: none;
+}
+
+.domain_box .list_item text {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.domain_box .list_item .del_item {
+  font-size: 24rpx;
+  line-height: 40rpx;
+  display: inline-block;
+  height: 40rpx;
+  margin-top: 30rpx;
+  padding: 5rpx 25rpx;
+  border-radius: 30rpx;
+  color: #e64340;
+  border: 2rpx solid #e64340;
+}

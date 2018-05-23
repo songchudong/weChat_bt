@@ -1,0 +1,50 @@
+/* pages/server/login.wxss */
+
+.login_title {
+  margin: 80rpx;
+  text-align: center;
+  font-size: 45rpx;
+  color: #20a23a;
+}
+
+.login_form {
+  width: 80%;
+  margin: auto;
+}
+
+.login_input_list {
+  background: #fff;
+  height: 45px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  border-radius: 5px;
+  margin-bottom: 6%;
+  position: relative;
+}
+.login_input_list input{
+  padding-left: 25rpx;
+}
+.login_input_list .login_label {
+  margin-left: 3%;
+  line-height: 45px;
+  color: #a0a0a0;
+  font-size: 35rpx;
+  display: flex;
+  align-items: center;
+}
+
+.login_input_list .login_label image {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.login_input_list .login_input {
+  height: 100%;
+  width: 72%;
+}
+
+.login_icon{
+  width: 10%;
+  display: flex;
+  align-items: center;
+}

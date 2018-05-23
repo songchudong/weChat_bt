@@ -1,0 +1,23 @@
+<!--pages/blind/scan.wxml-->
+
+<template name="scan">
+
+  <view class='describe'>
+    <text>
+  绑定步骤：
+  </text>
+    <text>
+  1、登录宝塔面板
+  2、软件管理安装微信小程序插件
+  3、扫码绑定即可
+</text>
+  </view>
+
+  <view class='btn' bindtap="scan">
+    <image src='/img/logo/scan.png'></image>
+    <text>扫码绑定/登录</text>
+  </view>
+
+</template>
+
+<template is="scan" />
