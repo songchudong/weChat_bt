@@ -97,14 +97,12 @@ App({
           // console.log('请求状态:'+res.statusCode,',请求返回值:',res.data);
           if(res.statusCode == 200){
             if (res.data == null){
-              this.removeLoginCache();
               reject(res);
               this.showErrorModal('获取失败，请下拉刷新获取数据','提示');
               wx.hideLoading();
               return false;
             }
             if (res.data === false) {
-              this.removeLoginCache();
               reject(res);
               this.showErrorModal('服务不支持，请升级面板版本', '提示');
               wx.hideLoading();
