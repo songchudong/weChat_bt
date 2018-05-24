@@ -114,6 +114,10 @@ page {
   font-size: 28rpx;
   line-height: 50rpx;
 }
+.task_tip text:nth-child(3){
+  font-size: 28rpx;
+  color: #20a53a;
+}
 
 .box-list {
   margin-top: 25rpx;

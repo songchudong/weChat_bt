@@ -9,7 +9,7 @@ Page({
     sid: null,
     start_date: '2017-03-11',
     end_date: null,
-    index_cut: 2,
+    index_cut: 0,
     monitor_index: 0,
     environment_index: 0,
     task_index: 0,
@@ -391,33 +391,51 @@ Page({
   get_task_list: function () {
     let _this = this;
     if (this.data.task_view === null){
-      app.http({
-        id: this.data.sid,
+      wx.request({
+        url: app.server + '/?mod=send_panel',
         data: {
-          model: 'panelPlugin',
-          action: 'getPluginList',
-          type: '4'
-        }
-      }).then(res => {
-        let resdata = res.data;
-        console.log(res);
-        for (let i = 0; i < resdata.length; i++) {
-          if (resdata[i].name == "task_manager") {
-            switch (resdata[i].end) {
-              case '待支付':
-                this.setData({ task_view: false });
-                break;
-              case '已过期':
-                this.setData({ task_view: false });
-                break;
-              default:
-                this.setData({ task_view: true });
-                req();
-                break;
+          sid: this.data.sid,
+          token: app.globalData.token,
+          pdata: JSON.stringify({
+            model: 'panelPlugin',
+            action: 'getPluginList',
+            type: '4'
+          })
+        },
+        method: 'POST',
+        dataType: 'json',
+        responseType: 'text',
+        success: function(res) {
+          
+          let resdata = res.data;
+          console.log(res);
+          for (let i = 0; i < resdata.length; i++) {
+            if (resdata[i].name == "task_manager") {
+              switch (resdata[i].end) {
+                case '待支付':
+                  this.setData({ task_view: false });
+                  break;
+                case '已过期':
+                  this.setData({ task_view: false });
+                  break;
+              }
+              console.log('j')
+              for (let j = 0; j < resdata[i].versions.length; j++) {
+                console.log('j')
+                if (resdata[i].versions[j].status) {
+                  this.setData({ task_view: true });
+                  req();
+                  return false;
+                }
+              }
+              console.log('j')
+              this.setData({ task_view: false });
             }
           }
-        }
-      });
+        },
+        fail: function(res) {},
+        complete: function(res) {},
+      })
     }else{
       req();
     }

@@ -81,7 +81,7 @@
 
 
 </block>
-<block wx:elif="{{index_cut == 2 && task_view}}">
+<block wx:elif="{{index_cut == 2}}">
   <block wx:if="{{task_view}}">
     <view class="btn-group-two task">
       <view class='btn-item-box' wx:for="{{task_list}}" wx:key="index">
@@ -453,12 +453,12 @@
         </scroll-view>
       </view>
     </block>
-
   </block>
   <block wx:else>
     <view class='task_tip'>
       <text>当前服务需要购买宝塔任务管理器插件。</text>
       <text>如需购买插件，请登录面板->软件管理->付费插件->宝塔任务管理器，即可购买产品。</text>
+      <text>如果已购买该插件，请安装该插件。</text>
     </view>
   </block>
 </block>

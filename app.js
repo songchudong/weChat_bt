@@ -94,17 +94,16 @@ App({
           pdata: JSON.stringify(obj.data)
         },
         success: res=>{
-          // console.log('请求状态:'+res.statusCode,',请求返回值:',res.data);
           if(res.statusCode == 200){
             if (res.data == null){
               reject(res);
-              this.showErrorModal('获取失败，请下拉刷新获取数据','提示');
+              this.showErrorModal('获取失败，请下拉刷新重新获取数据','提示');
               wx.hideLoading();
               return false;
             }
             if (res.data === false) {
               reject(res);
-              this.showErrorModal('服务不支持，请升级面板版本', '提示');
+              this.showErrorModal('服务不支持，请将面板和小程序插件升级至最新版本', '提示');
               wx.hideLoading();
               return false;
             }
