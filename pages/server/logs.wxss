@@ -1,18 +1,26 @@
-page{
-  background-color: #333;
+page {
+      background-color: #333;
 }
+
 .title {
-  padding: 25rpx;
-  font-size: 30rpx;
-  background: #fff;
+      padding: 25rpx;
+      box-sizing: border-box;
+      font-size: 30rpx;
+      width: 100%;
+      background: #fff;
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 999;
 }
 
 .conter {
-  font-size: 28rpx;
-  height: 100%;
-  width: 100%;
-  white-space: pre;
-  margin: 0px;
-  color: #fff;
-  padding: 0 5px;
+      font-size: 28rpx;
+      height: 100%;
+      width: 100%;
+      white-space: pre;
+      margin: 0px;
+      color: #fff;
+      padding: 0 5px;
+      margin-top: 80rpx;
 }

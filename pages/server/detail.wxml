@@ -1,492 +1,485 @@
 <wxs module="filters" src="../../filter/common.wxs"></wxs>
 <view class='mask_view' wx:if="{{mask_view}}" bindtap='mask_tap'></view>
 <view class="btn-group">
-  <view wx:for="{{tab_list}}" wx:key="index" id="{{index}}" bindtap="tab_lord_cut" class="btn-list {{item.index == index_cut?'item':''}}">{{item.name}}</view>
+      <view wx:for="{{tab_list}}" wx:key="index" id="{{index}}" bindtap="tab_lord_cut" class="btn-list {{item.index == index_cut?'item':''}}">{{item.name}}</view>
 </view>
 <block wx:if="{{index_cut == 0}}">
-  <view class="btn-group-two">
-    <view wx:for="{{monitor_list}}" wx:key="index" bindtap="tabCut" data-index='{{item.index}}' class="btn-list-two {{item.index == monitor_index?'item':''}}">{{item.name}}</view>
-  </view>
-  <view class="btn-group" wx:if="{{ monitor_index=='-1' }}">
-    <picker mode="date" value="{{start_date}}" start="2017-02-28" end="{{start_date}}" bindchange="setStartDate">
-      {{start_date}}
-      <image src="/img/logo/select.png"></image>
-    </picker>
-    <text>到</text>
-    <picker mode="date" value="{{end_date}}" start="2017-02-28" bindchange="setEndDate" end="{{end_date}}">
-      {{end_date}}
-      <image src="/img/logo/select.png"></image>
-    </picker>
-  </view>
-  <view class="box-list">
-    <text>负载状态 (%)</text>
-    <canvas style="height:220px;width:100%;" canvasId="loadAverage"></canvas>
-  </view>
+      <view class="btn-group-two">
+            <view wx:for="{{monitor_list}}" wx:key="index" bindtap="tabCut" data-index='{{item.index}}' class="btn-list-two {{item.index == monitor_index?'item':''}}">{{item.name}}</view>
+      </view>
+      <view class="btn-group" wx:if="{{ monitor_index=='-1' }}">
+            <picker mode="date" value="{{start_date}}" start="2017-02-28" end="{{start_date}}" bindchange="setStartDate">
+                  {{start_date}}
+                  <image src="/img/logo/select.png"></image>
+            </picker>
+            <text>到</text>
+            <picker mode="date" value="{{end_date}}" start="2017-02-28" bindchange="setEndDate" end="{{end_date}}">
+                  {{end_date}}
+                  <image src="/img/logo/select.png"></image>
+            </picker>
+      </view>
+      <view class="box-list">
+            <text>负载状态 (%)</text>
+            <canvas style="height:220px;width:100%;" canvasId="loadAverage"></canvas>
+      </view>
 
-  <view class="box-list">
-    <text>网络IO (KB/s)</text>
-    <canvas style="height:220px;width:100%;" canvasId="network"></canvas>
-  </view>
+      <view class="box-list">
+            <text>网络IO (KB/s)</text>
+            <canvas style="height:220px;width:100%;" canvasId="network"></canvas>
+      </view>
 
-  <view class="box-list">
-    <text>cpu 使用率(%)</text>
-    <canvas style="height:220px;width:100%;" canvasId="pro"></canvas>
-  </view>
+      <view class="box-list">
+            <text>cpu 使用率(%)</text>
+            <canvas style="height:220px;width:100%;" canvasId="pro"></canvas>
+      </view>
 
-  <view class="box-list">
-    <text>内存 使用率(%)</text>
-    <canvas style="height:220px;width:100%;" canvasId="mem"></canvas>
-  </view>
+      <view class="box-list">
+            <text>内存 使用率(%)</text>
+            <canvas style="height:220px;width:100%;" canvasId="mem"></canvas>
+      </view>
 
-  <view class="box-list">
-    <text>磁盘IO</text>
-    <canvas style="height:220px;width:100%;" canvasId="disk"></canvas>
-  </view>
+      <view class="box-list">
+            <text>磁盘IO</text>
+            <canvas style="height:220px;width:100%;" canvasId="disk"></canvas>
+      </view>
 </block>
 <block wx:elif="{{index_cut == 1}}">
-  <view class="btn-group-two environment">
-    <view wx:for="{{environment_list}}" wx:key='item.index' data-index="{{item.index}}" bind:tap="tabCut" class="btn-list-two {{environment_index == item.index?'item':''}}">{{item.name}}</view>
-  </view>
-  <view class="softs-list">
-    <view wx:for="{{plugin_list}}" wx:key="id" class="softs-box" bindtap="set_plugin" data-name="{{item.name}}" data-status="{{item.run}}" data-version="{{item.version}}" data-index="{{index}}">
-      <view class="softs-icon">
-        <image src="{{'/img/softs_icon/ico-'+ item.name +'.png'}}" mode="widthFix" />
+      <view class="btn-group-two environment">
+            <view wx:for="{{environment_list}}" wx:key='item.index' data-index="{{item.index}}" bind:tap="tabCut" class="btn-list-two {{environment_index == item.index?'item':''}}">{{item.name}}</view>
       </view>
-      <view class="softs-title">
-        <text>{{item.name +'_'+ item.version}}</text>
-        <block wx:if="{{item.run}}">
-          <image src="/img/logo/start_ico.png" mode="widthFix" />
-        </block>
-        <block wx:else>
-          <image src="/img/logo/stop_ico.png" mode="widthFix" />
-        </block>
+      <view class="softs-list">
+            <view wx:for="{{plugin_list}}" wx:key="id" class="softs-box" bindtap="set_plugin" data-name="{{item.name}}" data-status="{{item.run}}" data-version="{{item.version}}" data-index="{{index}}">
+                  <view class="softs-icon">
+                        <image src="{{'/img/softs_icon/ico-'+ item.name +'.png'}}" mode="widthFix" />
+                  </view>
+                  <view class="softs-title">
+                        <text>{{item.name +'_'+ item.version}}</text>
+                        <block wx:if="{{item.run}}">
+                              <image src="/img/logo/start_ico.png" mode="widthFix" />
+                        </block>
+                        <block wx:else>
+                              <image src="/img/logo/stop_ico.png" mode="widthFix" />
+                        </block>
+                  </view>
+            </view>
       </view>
-    </view>
-  </view>
 
-  <view class='plugin_view' wx:if="{{plugin_view_box}}">
-    <icon type="clear" size="22" color='#e64340' bindtap='mask_tap'/>
-    <view class='plugin_title'>{{plugin_name}} 管理</view>
-    <view class='plugin_status'>当前状态：
-      <view wx:if="{{plugin_status}}">开启<image src="/img/logo/start_ico.png" mode="widthFix" /></view>
-      <view wx:else>暂停<image src="/img/logo/stop_ico.png" mode="widthFix" /></view>
-    </view>
-    <view class='set_plugin_group'>
-      <button type="warn" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" data-index="{{plugin_index}}" data-type="stop" wx:if="{{plugin_status}}">停止</button>
-      <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" data-index="{{plugin_index}}" data-type="start" wx:else>启动</button>
-      <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" data-type="restart">重启</button>
-      <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" wx:if="{{plugin_cut}}" data-type='reload'>重载配置</button> 
-    </view>
-  </view>
+      <view class='plugin_view' wx:if="{{plugin_view_box}}">
+            <icon type="clear" size="22" color='#e64340' bindtap='mask_tap' />
+            <view class='plugin_title'>{{plugin_name}} 管理</view>
+            <view class='plugin_status'>当前状态：
+                  <view wx:if="{{plugin_status}}">开启
+                        <image src="/img/logo/start_ico.png" mode="widthFix" />
+                  </view>
+                  <view wx:else>暂停
+                        <image src="/img/logo/stop_ico.png" mode="widthFix" />
+                  </view>
+            </view>
+            <view class='set_plugin_group'>
+                  <button type="warn" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" data-index="{{plugin_index}}" data-type="stop" wx:if="{{plugin_status}}">停止</button>
+                  <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" data-index="{{plugin_index}}" data-type="start" wx:else>启动</button>
+                  <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" data-type="restart">重启</button>
+                  <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" wx:if="{{plugin_cut}}" data-type='reload'>重载配置</button>
+            </view>
+      </view>
 
 
 </block>
 <block wx:elif="{{index_cut == 2}}">
-  <block wx:if="{{task_view}}">
-    <view class="btn-group-two task">
-      <view class='btn-item-box' wx:for="{{task_list}}" wx:key="index">
-        <text bind:tap="tabCut" data-index="{{item.index}}" class="btn-list-two {{item.index == task_index?'item':''}}">{{item.name}}</text>
-      </view>
-    </view>
-    <block wx:if="{{task_index == 0}}">
-      <!-- 进程管理 -->
-      <view class='table-title'>进程管理列表</view>
-      <view class='table process_list'>
-        <view class='table_tr_left'>
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>应用名称</view>
+      <block wx:if="{{task_view === null}}">
+      </block>
+      <block wx:elif="{{task_view}}">
+            <view class="btn-group-two task">
+                  <view class='btn-item-box' wx:for="{{task_list}}" wx:key="index">
+                        <text bind:tap="tabCut" data-index="{{item.index}}" class="btn-list-two {{item.index == task_index?'item':''}}">{{item.name}}</text>
+                  </view>
             </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{course_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td' bind:tap="curse_view" data-index="{{index}}">{{item.name}}</view>
-            </view>
-          </view>
-        </view>
-        <scroll-view class='table_tr_right' scroll-x="true">
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>PID</view>
-              <view class='table_td'>线程</view>
-              <view class='table_td'>用户</view>
-              <view class='table_td'>CPU</view>
-              <view class='table_td'>内存</view>
-              <view class='table_td'>IO读</view>
-              <view class='table_td'>IO写</view>
-              <view class='table_td'>Socket</view>
-              <view class='table_td'>状态</view>
-              <view class='table_td'>进程创建时间</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{course_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td'>{{item.pid}}</view>
-              <view class='table_td'>{{item.threads}}</view>
-              <view class='table_td'>{{item.user}}</view>
-              <view class='table_td'>{{item.cpu_percent +'%'}}</view>
-              <view class='table_td'>{{filters.formaTunit(item.memory_used)}}</view>
-              <view class='table_td'>{{filters.formaTunit(item.io_read_speed)}}</view>
-              <view class='table_td'>{{filters.formaTunit(item.io_write_speed)}}</view>
-              <view class='table_td'>{{item.connects}}</view>
-              <view class='table_td'>{{item.status}}</view>
-              <view class='table_td'>{{filters.getDate(item.create_time,'YY-MM-DD hh:mm:ss')}}</view>
-            </view>
-          </view>
-        </scroll-view>
-        <view class='information' wx:if="{{course_info}}">
-          <view class='info-box'>
-            <view class='info_list'>
-              <view>
-                <text>CPU:</text>
-                <text>{{course_info.cpu}}%</text>
-              </view>
-              <view>
-                <text>内存：</text>
-                <text>{{filters.formaTunit(course_info.mem)}}</text>
-              </view>
-            </view>
-            <view class='info_list'>
-              <view>负载(Load average)</view>
-              <view>{{course_info.load_average[1] + '，'+ course_info.load_average[5]+'，'+course_info.load_average[15]}}</view>
-            </view>
-            <view class='info_list'>
-              <view>
-                <text>进程数:</text>
-                <text>{{course_info.activity}}</text>
-              </view>
-              <view>
-                <text>硬盘:</text>
-                <text>{{filters.formaTunit(course_info.disk)}}</text>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </block>
+            <block wx:if="{{task_index == 0}}">
+                  <!-- 进程管理 -->
+                  <view class='table-title'>进程管理列表</view>
+                  <view class='table process_list'>
+                        <view class='table_tr_left'>
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>应用名称</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{course_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td' bind:tap="curse_view" data-index="{{index}}">{{item.name}}</view>
+                                    </view>
+                              </view>
+                        </view>
+                        <scroll-view class='table_tr_right' scroll-x="true">
+                              <view class='table_header'>
+                                    <view class='table_tr'>
 
-    <block wx:elif="{{task_index == 1}}">
-      <!--启动项 -->
+                                          <view class='table_td'>CPU</view>
+                                          <view class='table_td'>内存</view>
+                                          <view class='table_td'>IO写</view>
+                                          <view class='table_td'>IO读</view>
+                                          <view class='table_td'>PID</view>
+                                          <view class='table_td'>线程</view>
+                                          <view class='table_td'>用户</view>
+                                          <view class='table_td'>Socket</view>
+                                          <view class='table_td'>状态</view>
+                                          <view class='table_td'>进程创建时间</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{course_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td'>{{item.cpu_percent +'%'}}</view>
+                                          <view class='table_td'>{{filters.formaTunit(item.memory_used)}}</view>
+                                          <view class='table_td'>{{filters.formaTunit(item.io_write_speed)}}</view>
+                                          <view class='table_td'>{{filters.formaTunit(item.io_read_speed)}}</view>
+                                          <view class='table_td'>{{item.pid}}</view>
+                                          <view class='table_td'>{{item.threads}}</view>
+                                          <view class='table_td'>{{item.user}}</view>
+                                          <view class='table_td'>{{item.connects}}</view>
+                                          <view class='table_td'>{{item.status}}</view>
+                                          <view class='table_td'>{{filters.getDate(item.create_time,'YY-MM-DD hh:mm:ss')}}</view>
+                                    </view>
+                              </view>
+                        </scroll-view>
+                        <view class='information' wx:if="{{course_info}}">
+                              <view class='info-box'>
+                                    <view class='info_list'>
+                                          <view>
+                                                <text>CPU:</text>
+                                                <text>{{course_info.cpu}}%</text>
+                                          </view>
+                                          <view>
+                                                <text>内存：</text>
+                                                <text>{{filters.formaTunit(course_info.mem)}}</text>
+                                          </view>
+                                    </view>
+                                    <view class='info_list'>
+                                          <view>负载(Load average)</view>
+                                          <view>{{course_info.load_average[1] + '，'+ course_info.load_average[5]+'，'+course_info.load_average[15]}}</view>
+                                    </view>
+                                    <view class='info_list'>
+                                          <view>
+                                                <text>进程数:</text>
+                                                <text>{{course_list.length}}</text>
+                                          </view>
+                                          <view>
+                                                <text>硬盘:</text>
+                                                <text>{{filters.formaTunit(course_info.disk)}}</text>
+                                          </view>
+                                    </view>
+                              </view>
+                        </view>
+                  </view>
+            </block>
 
-      <view class='table-title'>启动项列表</view>
-      <view class='table run_list'>
-        <view class='table_tr_left'>
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>名称</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{run_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td' btntop="">{{item.name}}</view>
-            </view>
-          </view>
-        </view>
-        <scroll-view class='table_tr_right' scroll-x="true">
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>启动路径</view>
-              <view class='table_td'>文件大小</view>
-              <view class='table_td'>文件权限</view>
-              <view class='table_td'>描述</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{run_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td'>{{item.srcfile}}</view>
-              <view class='table_td'>{{filters.formaTunit(item.size)}}</view>
-              <view class='table_td'>{{item.access}}</view>
-              <view class='table_td'>{{item.ps}}</view>
-            </view>
-          </view>
-        </scroll-view>
-        <view class='information' wx:if="{{run_info}}">当前运行级别： {{'level-' + run_info}}</view>
-      </view>
-    </block>
+            <block wx:elif="{{task_index == 1}}">
+                  <!--启动项 -->
 
-    <block wx:elif="{{task_index == 2}}">
-      <!-- 服务 -->
-      <view class='table-title'>进程管理列表</view>
-      <view class='table service_list'>
-        <view class='table_tr_left'>
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>名称</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{service_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td' btntop="">{{item.name}}</view>
-            </view>
-          </view>
-        </view>
-        <scroll-view class='table_tr_right' scroll-x="true">
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>Level-0</view>
-              <view class='table_td'>Level-1</view>
-              <view class='table_td'>Level-2</view>
-              <view class='table_td'>Level-3</view>
-              <view class='table_td'>Level-4</view>
-              <view class='table_td'>Level-5</view>
-              <view class='table_td'>Level-6</view>
-              <view class='table_td'>描述</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{service_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td'>
-                <rich-text nodes="{{item.runlevel_0}}"></rich-text>
-              </view>
-              <view class='table_td'>
-                <rich-text nodes="{{item.runlevel_1}}"></rich-text>
-              </view>
-              <view class='table_td'>
-                <rich-text nodes="{{item.runlevel_2}}"></rich-text>
-              </view>
-              <view class='table_td'>
-                <rich-text nodes="{{item.runlevel_3}}"></rich-text>
-              </view>
-              <view class='table_td'>
-                <rich-text nodes="{{item.runlevel_4}}"></rich-text>
-              </view>
-              <view class='table_td'>
-                <rich-text nodes="{{item.runlevel_5}}"></rich-text>
-              </view>
-              <view class='table_td'>
-                <rich-text nodes="{{item.runlevel_6}}"></rich-text>
-              </view>
-              <view class='table_td '>{{item.ps}}</view>
-            </view>
-          </view>
-        </scroll-view>
-        <view class='information' style=''>当前运行级别： level-3</view>
-      </view>
-    </block>
+                  <view class='table-title'>启动项列表</view>
+                  <view class='table run_list'>
+                        <view class='table_tr_left'>
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>名称</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{run_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td' btntop="">{{item.name}}</view>
+                                    </view>
+                              </view>
+                        </view>
+                        <scroll-view class='table_tr_right' scroll-x="true">
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>描述</view>
+                                          <view class='table_td'>启动路径</view>
+                                          <view class='table_td'>文件大小</view>
+                                          <view class='table_td'>文件权限</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{run_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td'>{{item.ps}}</view>
+                                          <view class='table_td'>{{item.srcfile}}</view>
+                                          <view class='table_td'>{{filters.formaTunit(item.size)}}</view>
+                                          <view class='table_td'>{{item.access}}</view>
+                                    </view>
+                              </view>
+                        </scroll-view>
+                        <view class='information' wx:if="{{run_info}}">当前运行级别： {{'level-' + run_info}}</view>
+                  </view>
+            </block>
 
-    <block wx:elif="{{task_index == 3}}">
-      <!-- 网络 -->
-      <view class='table-title'>网络管理列表</view>
-      <view class='table network_list'>
-        <view class='table_tr_left'>
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>协议</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{network_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td' btntop="">{{item.type}}</view>
-            </view>
-          </view>
-        </view>
-        <scroll-view class='table_tr_right' scroll-x="true">
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>本地地址</view>
-              <view class='table_td'>远程地址</view>
-              <view class='table_td'>状态</view>
-              <view class='table_td'>进程</view>
-              <view class='table_td'>PID</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{network_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td '>{{item.laddr[0] +':'+ item.laddr[1]}}</view>
-              <view class='table_td '>{{item.raddr.length > 1? item.raddr[1]:'NONE'}}</view>
-              <view class='table_td '>{{item.status}}</view>
-              <view class='table_td '>{{item.process}}</view>
-              <view class='table_td '>{{item.pid}}</view>
-            </view>
-          </view>
-        </scroll-view>
-        <view class='information' style=''>
-          <view class='info_list'>
-            <view>
-              <text>总发送:</text>
-              <text>{{filters.formaTunit(network_info.upTotal)}}</text>
-            </view>
-            <view>
-              <text>总接收：</text>
-              <text>{{filters.formaTunit(network_info.downTotal)}}</text>
-            </view>
-          </view>
-          <view class='info_list'>
-            <view>
-              <text>上行:</text>
-              <text>{{filters.formaTunit(network_info.up)}}</text>
-            </view>
-            <view>
-              <text>下行:</text>
-              <text>{{filters.formaTunit(network_info.down)}}</text>
-            </view>
-          </view>
-          <view class='info_list'>
-            <view>
-              <text>总发包:</text>
-              <text>{{filters.to_max(network_info.upPackets)}}</text>
-            </view>
-            <view>
-              <text>总收包:</text>
-              <text>{{filters.to_max(network_info.downPackets)}}</text>
-            </view>
-          </view>
-          <view class='info_list'>
-            <view>
-              <text>包发送/秒:</text>
-              <text>{{filters.to_max(network_info.upPackets_s)}}</text>
-            </view>
-            <view>
-              <text>包接送/秒:</text>
-              <text>{{filters.to_max(network_info.downPackets_s)}}</text>
-            </view>
-          </view>
-        </view>
-      </view>
-    </block>
+            <block wx:elif="{{task_index == 2}}">
+                  <!-- 服务 -->
+                  <view class='table-title'>进程管理列表</view>
+                  <view class='table service_list'>
+                        <view class='table_tr_left'>
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>名称</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{service_list}}" wx:key='item.pid' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td' btntop="">{{item.name}}</view>
+                                    </view>
+                              </view>
+                        </view>
+                        <scroll-view class='table_tr_right' scroll-x="true">
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>描述</view>
+                                          <view class='table_td'>Level-3</view>
+                                          <view class='table_td'>Level-5</view>
 
-    <block wx:elif="{{task_index == 4}}">
-      <!-- 用户 -->
-      <view class='table-title'>用户列表</view>
-      <view class='table user_list'>
-        <view class='table_tr_left'>
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>用户名</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{user_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td' btntop="">{{item.username}}</view>
-            </view>
-          </view>
-        </view>
-        <scroll-view class='table_tr_right' scroll-x="true">
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>home</view>
-              <view class='table_td'>用户组</view>
-              <view class='table_td'>uid</view>
-              <view class='table_td'>gid</view>
-              <view class='table_td'>登录脚本</view>
-              <view class='table_td'>描述</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{user_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td'>{{item.home}}</view>
-              <view class='table_td'>{{item.group}}</view>
-              <view class='table_td'>{{item.uid}}</view>
-              <view class='table_td'>{{item.gid}}</view>
-              <view class='table_td'>{{item.login_shell}}</view>
-              <view class='table_td'>{{item.ps}}</view>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
-    </block>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{service_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td '>{{item.ps}}</view>
+                                          <view class='table_td'>
+                                                <rich-text nodes="{{item.runlevel_3}}"></rich-text>
+                                          </view>
+                                          <view class='table_td'>
+                                                <rich-text nodes="{{item.runlevel_5}}"></rich-text>
+                                          </view>
 
-    <block wx:elif="{{task_index == 5}}">
-      <!-- 计划任务 -->
-      <view class='table-title'>计划任务</view>
-      <view class='table cron_list'>
-        <view class='table_tr_left'>
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>周期</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{cron_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td' btntop="">{{item.cycle}}</view>
-            </view>
-          </view>
-        </view>
-        <scroll-view class='table_tr_right' scroll-x="true">
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>执行</view>
-              <view class='table_td'>描述</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{cron_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td'>{{item.test}}</view>
-              <view class='table_td'>{{item.ps}}</view>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
-    </block>
+                                    </view>
+                              </view>
+                        </scroll-view>
+                        <view class='information' style=''>当前运行级别： level-3</view>
+                  </view>
+            </block>
 
-    <block wx:elif="{{task_index == 6}}">
-      <!-- 会话 -->
-      <view class='table-title'>计划任务</view>
-      <view class='table who_list'>
-        <view class='table_tr_left'>
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>用户</view>
+            <block wx:elif="{{task_index == 3}}">
+                  <!-- 网络 -->
+                  <view class='table-title'>网络管理列表</view>
+                  <view class='table network_list'>
+                        <view class='table_tr_left'>
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>协议</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{network_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td' btntop="">{{item.type}}</view>
+                                    </view>
+                              </view>
+                        </view>
+                        <scroll-view class='table_tr_right' scroll-x="true">
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>本地地址</view>
+                                          <view class='table_td'>远程地址</view>
+                                          <view class='table_td'>状态</view>
+                                          <view class='table_td'>进程</view>
+                                          <view class='table_td'>PID</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{network_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td '>{{item.laddr[0] +':'+ item.laddr[1]}}</view>
+                                          <view class='table_td '>{{item.raddr.length > 1? item.raddr[0]+':'+item.raddr[1]:'NONE'}}</view>
+                                          <view class='table_td '>{{item.status}}</view>
+                                          <view class='table_td '>{{item.process}}</view>
+                                          <view class='table_td '>{{item.pid}}</view>
+                                    </view>
+                              </view>
+                        </scroll-view>
+                        <view class='information' style=''>
+                              <view class='info_list'>
+                                    <view>
+                                          <text>总发送:</text>
+                                          <text>{{filters.formaTunit(network_info.upTotal)}}</text>
+                                    </view>
+                                    <view>
+                                          <text>总接收：</text>
+                                          <text>{{filters.formaTunit(network_info.downTotal)}}</text>
+                                    </view>
+                              </view>
+                              <view class='info_list'>
+                                    <view>
+                                          <text>上行:</text>
+                                          <text>{{filters.formaTunit(network_info.up)}}</text>
+                                    </view>
+                                    <view>
+                                          <text>下行:</text>
+                                          <text>{{filters.formaTunit(network_info.down)}}</text>
+                                    </view>
+                              </view>
+                              <view class='info_list'>
+                                    <view>
+                                          <text>总发包:</text>
+                                          <text>{{filters.to_max(network_info.upPackets)}}</text>
+                                    </view>
+                                    <view>
+                                          <text>总收包:</text>
+                                          <text>{{filters.to_max(network_info.downPackets)}}</text>
+                                    </view>
+                              </view>
+                              <view class='info_list'>
+                                    <view>
+                                          <text>包发送/秒:</text>
+                                          <text>{{filters.to_max(network_info.upPackets_s)}}</text>
+                                    </view>
+                                    <view>
+                                          <text>包接送/秒:</text>
+                                          <text>{{filters.to_max(network_info.downPackets_s)}}</text>
+                                    </view>
+                              </view>
+                        </view>
+                  </view>
+            </block>
+
+            <block wx:elif="{{task_index == 4}}">
+                  <!-- 用户 -->
+                  <view class='table-title'>用户列表</view>
+                  <view class='table user_list'>
+                        <view class='table_tr_left'>
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>用户名</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{user_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td' btntop="">{{item.username}}</view>
+                                    </view>
+                              </view>
+                        </view>
+                        <scroll-view class='table_tr_right' scroll-x="true">
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                           <view class='table_td'>描述</view>
+                                          <view class='table_td'>用户组</view>
+                                          <view class='table_td'>home</view>
+                                          <view class='table_td'>uid</view>
+                                          <view class='table_td'>gid</view>
+                                          <view class='table_td'>登录脚本</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{user_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td'>{{item.ps}}</view>
+                                          <view class='table_td'>{{item.group}}</view>
+                                          <view class='table_td'>{{item.home}}</view>
+                                          <view class='table_td'>{{item.uid}}</view>
+                                          <view class='table_td'>{{item.gid}}</view>
+                                          <view class='table_td'>{{item.login_shell}}</view>
+                                    </view>
+                              </view>
+                        </scroll-view>
+                  </view>
+            </block>
+
+            <block wx:elif="{{task_index == 5}}">
+                  <!-- 计划任务 -->
+                  <view class='table-title'>计划任务</view>
+                  <view class='table cron_list'>
+                        <view class='table_tr_left'>
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>周期</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{cron_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td' btntop="">{{item.cycle}}</view>
+                                    </view>
+                              </view>
+                        </view>
+                        <scroll-view class='table_tr_right' scroll-x="true">
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>描述</view>
+                                          <view class='table_td'>执行</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{cron_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td'>{{item.ps}}</view>
+                                          <view class='table_td'>{{item.test}}</view>
+                                    </view>
+                              </view>
+                        </scroll-view>
+                  </view>
+            </block>
+
+            <block wx:elif="{{task_index == 6}}">
+                  <!-- 会话 -->
+                  <view class='table-title'>计划任务</view>
+                  <view class='table who_list'>
+                        <view class='table_tr_left'>
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+                                          <view class='table_td'>用户</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{who_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td' btntop="">{{item.user}}</view>
+                                    </view>
+                              </view>
+                        </view>
+                        <scroll-view class='table_tr_right' scroll-x="true">
+                              <view class='table_header'>
+                                    <view class='table_tr'>
+
+                                          <view class='table_td'>登陆IP</view>
+                                          <view class='table_td'>登陆时间</view>
+                                          <view class='table_td'>PTS</view>
+                                    </view>
+                              </view>
+                              <view class='table_body'>
+                                    <view wx:for="{{who_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
+                                          <view class='table_td'>{{item.ip}}</view>
+                                          <view class='table_td'>{{item.date}}</view>
+                                          <view class='table_td'>{{item.pts}}</view>
+                                    </view>
+                              </view>
+                        </scroll-view>
+                  </view>
+            </block>
+      </block>
+      <block wx:else>
+            <view class='task_tip'>
+                  <text>当前服务需要购买宝塔任务管理器插件。</text>
+                  <text>如需购买插件，请登录面板->软件管理->付费插件->宝塔任务管理器，即可购买产品。</text>
+                  <text>如果已购买该插件，请安装该插件。</text>
             </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{who_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td' btntop="">{{item.user}}</view>
-            </view>
-          </view>
-        </view>
-        <scroll-view class='table_tr_right' scroll-x="true">
-          <view class='table_header'>
-            <view class='table_tr'>
-              <view class='table_td'>PTS</view>
-              <view class='table_td'>登陆IP</view>
-              <view class='table_td'>登陆时间</view>
-            </view>
-          </view>
-          <view class='table_body'>
-            <view wx:for="{{who_list}}" wx:key='index' class='table_tr {{index % 2 == 0?"two":""}}'>
-              <view class='table_td'>{{item.pts}}</view>
-              <view class='table_td'>{{item.ip}}</view>
-              <view class='table_td'>{{item.date}}</view>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
-    </block>
-  </block>
-  <block wx:else>
-    <view class='task_tip'>
-      <text>当前服务需要购买宝塔任务管理器插件。</text>
-      <text>如需购买插件，请登录面板->软件管理->付费插件->宝塔任务管理器，即可购买产品。</text>
-      <text>如果已购买该插件，请安装该插件。</text>
-    </view>
-  </block>
+      </block>
 </block>
 
 <block wx:elif="{{index_cut == 3}}">
-  <view class='sites_list'>
-    <view class='sites_box' wx:for="{{sites_list}}" wx:key="index">
-      <view class='sites_title'>
-        <view class='sites_domain'>{{item.name}}
-          <text class="sites-item {{item.status == '1'?'on':'off'}}">{{item.status == '1'?'运行中':'已暂停'}}</text>
-        </view>
-        <view class='sites_time'>到期时间:{{item.edate == '0000-00-00' ? '永久' : item.edate}}</view>
+      <view class='sites_list'>
+            <view class='sites_box' wx:for="{{sites_list}}" wx:key="index">
+                  <view class='sites_title'>
+                        <view class='sites_domain'>{{item.name}}
+                              <text class="sites-item {{item.status == '1'?'on':'off'}}">{{item.status == '1'?'运行中':'已暂停'}}</text>
+                        </view>
+                        <view class='sites_time'>到期时间:{{item.edate == '0000-00-00' ? '永久' : item.edate}}</view>
+                  </view>
+                  <view class='sites_ps'>{{item.ps}}</view>
+                  <view class='btn_group'>
+                        <view class='btn_item' bindtap='site_stop' data-index="{{index}}" wx:if="{{item.status == '1'}}">
+                              <text>暂停站点</text>
+                        </view>
+                        <view class='btn_item' bindtap='site_stop' data-index="{{index}}" wx:else>
+                              <text>开启站点</text>
+                        </view>
+                        <view class='btn_item' bindtap='set_domain' data-index="{{index}}">
+                              <text>域名管理</text>
+                        </view>
+                        <!-- <view class='btn_item' bindtap='logs_view' data-index="{{index}}">
+                              <text>日志</text>
+                        </view> -->
+                  </view>
+            </view>
+            <view wx:if="{{sites_list.length > 40}}" class="list-tip" style="background-color:#fff;font-size:25rpx;margin-top:25rpx;color:#666;padding:25rpx;text-align:center;">
+                  当前页面仅支持前40个站点，其余站点请使用网页管理。
+            </view>
       </view>
-      <view class='sites_ps'>{{item.ps}}</view>
-      <view class='btn_group'>
-        <view class='btn_item' bindtap='site_stop' data-index="{{index}}" wx:if="{{item.status == '1'}}">
-          <text>暂停站点</text>
-        </view>
-        <view class='btn_item' bindtap='site_stop' data-index="{{index}}" wx:else>
-          <text>开启站点</text>
-        </view>
-        <view class='btn_item' bindtap='set_domain' data-index="{{index}}">
-          <text>域名管理</text>
-        </view>
-        <view class='btn_item' bindtap='logs_view' data-index="{{index}}">
-          <text>日志</text>
-        </view>
-      </view>
-    </view>
-  </view>
 </block>

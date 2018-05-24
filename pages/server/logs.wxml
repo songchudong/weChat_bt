@@ -1,4 +1,4 @@
 <view class='title'>{{domain}}-站点日志</view>
-<scroll-view class='conter' scroll-x="true" scroll-y="true" style=''>
-  {{logsData || '获取中...'}}
+<scroll-view class='conter' id="j_page" scroll-x="true" scroll-y="true">
+  {{logsData  == null ? '加载中...':logsData}}
 </scroll-view>
