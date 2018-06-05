@@ -3,7 +3,7 @@
   font-size: 25rpx;
 }
 .box_title{
-  background: #f9f9f9;
+  background: #f3f3f3;
   padding: 25rpx;
   color: #666;
 }

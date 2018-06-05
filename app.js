@@ -2,9 +2,12 @@
 App({
       // 小程序初始化
       onLaunch: function () {
+            console.log();
             // 展示本地存储能力
-            this.globalData.token = wx.getStorageSync('token')
-            this.globalData.userInfo = wx.getStorageSync('userinfo')
+            this.globalData.token = wx.getStorageSync('token');
+            this.globalData.userInfo = wx.getStorageSync('userinfo');
+            this.globalData.serverList = wx.getStorageSync('serverList');
+            console.log(this.globalData.serverList );
             if (!this.globalData.token || !this.globalData.userInfo) {
                   this.getLogin();
             }
@@ -95,7 +98,7 @@ App({
                               if (res.statusCode == 200) {
                                     if (res.data == null) {
                                           reject(res);
-                                          this.showErrorModal('请下拉刷新列表或重新加载小程序', '提示');
+                                          this.showErrorModal('获取数据失败，请检查面板版本和插件版本是否为最新版本', '提示');
                                           wx.hideLoading();
                                           return false;
                                     }

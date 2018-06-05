@@ -3,52 +3,52 @@
 
 <progress percent="{{percent}}" stroke-width="3" color="#20a53a" active='{{ percent == 100 ? false:true}}' />
 
-<view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" bindtouchstart="touchstart" bindtouchmove="touchmove" wx:for="{{serverList}}" wx:key="sid">
+<view bindtouchstart="touchstart" bindtouchmove="touchmove" wx:for="{{serverList.server}}" wx:key="sid" class="touch-item {{serverList.isTouchMove[index] ? 'touch-move-active' : ''}}"  data-index="{{index}}">
       <view class='content'>
-            <view class='server_box' bindtap="navigateToDetail" data-id='{{ item.sid }}' data-status='{{ item.state }}' data-pay="{{item.info.status != false?'true':false}}">
+            <view class='server_box' bindtap="navigateToDetail" data-id='{{ item.sid }}' data-status='{{ item.state }}' data-pay="{{serverList.info[index].status != false?true:false}}">
                   <view class='server_list'>
-                        <block wx:if="{{item.info.status != false}}"> 
+                        <block wx:if="{{serverList.info[index].status != false}}"> 
                               <view class='list'>
                                     <view class='list_title'>
-                                          <view class='list_name'>{{item.info ? item.info.title : '宝塔Linux面板'}}</view>
-                                          <view class='list_state' style="{{item.state == 1 ? 'background-color:#20a53a' : 'background-color:#f00'}}">{{item.state == 1 ? '运行中' : '已关闭'}}</view>
+                                          <view class='list_name'>{{serverList.info[index] ? serverList.info[index].title : '宝塔Linux面板'}}</view>
+                                          <view class='list_state' style="{{item.state == 1 ? 'background-color:#20a53a' : 'background-color:#f00'}}">{{item.state == '1' ? '运行中' : '已关闭'}}</view>
                                     </view>
-                                    <view class='list_oper' wx:if='{{item.state == 1}}'>已稳定运行：{{item.info.time? filters.replaceStr(item.info.time): '0 分'}}</view>
+                                    <view class='list_oper' wx:if='{{item.state == 1}}'>已稳定运行：{{serverList.info[index].time? filters.replaceStr(serverList.info[index].time): '0 分'}}</view>
                               </view>
                         </block>
                         <block wx:else>
-                              <view class='list' style='display:none'></view>
+                              <view class='list'><view class='list_title'><view class='list_name'>高级功能不可用</view></view></view>
                         </block>
                         <view class='list'>IP地址：{{item.address}}</view>
-                        <view class='list' wx:if="{{item.info.status != false}}">
+                        <view class='list' wx:if="{{serverList.info[index].status != false}}">
                               <view class='state_group'>
-                                    <image class='icon' src="{{ item.state == 1 ? filters.GetLoadColor(item.info.load_average.one, item.info.load_average.limit)[0] : '/img/logo/load.png' }}"></image>
-                                    <view class='title' style="{{ item.state == 1 ? filters.GetLoadColor(item.info.load_average.one, item.info.load_average.limit)[1]: 'color:#6b6b6b' }}">负载 {{filters.proKeepADecimal(item.info.load_average.one, item.info.load_average.limit)}}%</view>
+                                    <image class='icon' src="{{ item.state == 1 ? filters.GetLoadColor(serverList.info[index].load_average.one, serverList.info[index].load_average.limit)[0] : '/img/logo/load.png' }}"></image>
+                                    <view class='title' style="{{ item.state == 1 ? filters.GetLoadColor(serverList.info[index].load_average.one, serverList.info[index].load_average.limit)[1]: 'color:#6b6b6b' }}">负载 {{filters.proKeepADecimal(serverList.info[index].load_average.one, serverList.info[index].load_average.limit)}}%</view>
                               </view>
                               <view class='state_group'>
                                     <image class='icon' src="{{ item.state == 1 ? '/img/logo/up_active.png' : '/img/logo/up.png'}}"></image>
-                                    <view class='title'>上行 {{ filters.KeepADecimal(item.info.network.up) }}</view>
+                                    <view class='title'>上行 {{ filters.KeepADecimal(serverList.info[index].network.up) }}</view>
                               </view>
                               <view class='state_group'>
                                     <image class='icon' src="{{ item.state == 1 ? '/img/logo/down_active.png': '/img/logo/down.png'}}"></image>
-                                    <view class='title'>下行 {{ filters.KeepADecimal(item.info.network.down) }}</view>
+                                    <view class='title'>下行 {{ filters.KeepADecimal(serverList.info[index].network.down) }}</view>
                               </view>
                         </view>
-                        <view class='list' style='font-size:26rpx;color：#20a53a;' wx:else>提示:{{item.info.msg}}</view>
+                        <view class='list' style='font-size:26rpx;color：#20a53a;' wx:else>提示:{{serverList.info[index].msg}}</view>
                   </view>
             </view>
-            <block wx:if="{{item.info.status != false}}"> 
-                  <view class='btn_group' wx:if="{{item.SshInfo}}">
+            <block wx:if="{{serverList.info[index].status != false}}"> 
+                  <view class='btn_group' wx:if="{{serverList.state[index]}}">
                         <view class='btn_item' bind:tap='close_panel' data-index='{{index}}'>
-                              <text wx:if="{{item.panel}}">开启面板</text>
+                              <text wx:if="{{serverList.state[index].panel}}">开启面板</text>
                               <text wx:else>关闭面版</text>
                         </view>
                         <view class='btn_item' bind:tap='set_ssh' data-index='{{index}}'>
-                              <text wx:if="{{item.SshInfo.status}}">关闭SSH</text>
+                              <text wx:if="{{serverList.state[index].status}}">关闭SSH</text>
                               <text wx:else>启用SSH</text>
                         </view>
                         <view class='btn_item' bind:tap='set_ping' data-index='{{index}}'>
-                              <text wx:if="{{item.SshInfo.ping}}">禁用PING</text>
+                              <text wx:if="{{serverList.state[index].ping}}">禁用PING</text>
                               <text wx:else>启用PING</text>
                         </view>
                   </view>

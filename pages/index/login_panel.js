@@ -16,6 +16,7 @@ Page({
    */
   onLoad: function (options) {
     // scan.scan(this, 'login')
+      app.getLogin();
   },
 
 

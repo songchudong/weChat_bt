@@ -49,10 +49,13 @@ function loginPanel(_this, data) {
 
 
 function blindPanel(data) {
+        console.log(app.server + '/?mod=bind_panel&' + data + '&token=' + app.globalData.token)
+        
   wx.request({
     url: app.server + '/?mod=bind_panel&' + data + '&token=' + app.globalData.token,
     method: "GET",
     success: function (res) {
+            console.log(res)
       wx.hideLoading();
       if (res.data) {
         app.showReturnInfo(res.data.status, res.data.msg)
@@ -62,7 +65,7 @@ function blindPanel(data) {
               url: "/pages/index/index",
               fail: function (res) { console.log(res) },
             })
-          }, 1000)
+          }, 5000)
         }
       } else {
         app.showReturnInfo(false, '绑定面板超时，请稍后重试')
