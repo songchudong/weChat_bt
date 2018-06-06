@@ -99,19 +99,17 @@ App({
                                     if (res.data == null) {
                                           reject(res);
                                           this.showErrorModal('获取数据失败，请检查面板版本和插件版本是否为最新版本', '提示');
-                                          wx.hideLoading();
                                           return false;
                                     }
                                     if (res.data === false) {
                                           reject(res);
                                           this.showErrorModal('服务不支持，请将面板和小程序插件升级至最新版本', '提示');
-                                          wx.hideLoading();
                                           return false;
                                     }
                                     if (res.data.status === false) {
                                           reject(res);
                                           this.showErrorModal(res.data.msg || '未知错误', '');
-                                          wx.hideLoading();
+                                          this.removeLoginCache();
                                           return false;
                                     }
                                     resolve(res.data);
@@ -120,7 +118,10 @@ App({
                         fail: res => {
                               reject(res);
                         }, complete: () => {
-                              obj.load == undefined || obj.load ? wx.hideLoading() : ''
+                              obj.load == undefined || obj.load ? wx.hideLoading() : '';
+                              // 下拉 不添加任何动作处理
+                              wx.stopPullDownRefresh() //停止下拉刷新
+                              wx.hideNavigationBarLoading() //完成停止加载
                         }
                   });
             });

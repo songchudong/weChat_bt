@@ -16,10 +16,10 @@ Page({
                 firewall_index:0,
                 tab_list: [
                         { name: '监控', index: 0 },
-                        { name: '环境', index: 1 },
-                        { name: '网站', index: 2 },
-                        { name: '任务管理', index: 3 },
-                        { name: '防火墙', index: 4 }
+                        { name: '防火墙', index: 1 },
+                        { name: '任务管理', index: 2 },
+                        { name: '环境', index: 3 },
+                        { name: '网站', index: 4 },
                 ],
                 monitor_list: [
                         { name: '今天', index: 0 },
@@ -114,44 +114,32 @@ Page({
          * 生命周期函数--监听页面显示
          */
         onShow: function () {
-                // 获取版本
-                // app.http({
-                //   id: this.data.sid,
-                //   data: {
-                //     model: 'system',
-                //     action: 'GetSystemTotal',
-                //   }
-                // }).then(res => {
-                //   let version = parseInt(res.version.replace('.', ''))
-                //   if (version > 588) {
-                //     console.log('当前面板版本为' + res.version);
-                //   }
-                // });
+                // 获取监控数据
                 this.serverInfoApi(this.data.sid, { stype: 0, model: 'ajax', action: 'loadInfo' }, 'loadInfo');
-                // this.get_safe_logs();
         },
         // 切换分类
         tab_lord_cut: function (e) {
                 console.log(e);
                 switch (e.target.id) {
                         case '0':
-                                this.serverInfoApi(this.data.sid, { stype: 0, model: 'ajax', action: 'loadInfo' }, 'loadInfo');
+                                this.serverInfoApi(this.data.sid, { stype: 0, model: 'ajax', action: 'loadInfo' }, 'loadInfo');//监控管理
                                 this.setData({ monitor_index: 0 });
                                 break;
                         case '1':
-                                this.get_plugin_list();
-                                this.setData({ environment_index: 0 });
+                                this.get_total_all();//防火墙
+                                this.setData({ firewall_index: 0 });
                                 break;
                         case '2':
-                                this.get_site_list();
+                                this.get_task_list();//任务管理
+                                this.setData({ task_index: 0 });
+
                                 break;
                         case '3':
-                                this.get_task_list();
-                                this.setData({ task_index: 0 });
+                                this.get_plugin_list();//环境管理
+                                this.setData({ environment_index: 0 });
                                 break;
                         case '4':
-                                this.get_total_all();
-                                this.setData({ firewall_index: 0 });
+                                this.get_site_list();//站点管理
                                 break;
                 }
                 this.setData({
@@ -170,10 +158,26 @@ Page({
                                 this.setData({ monitor_index: e.currentTarget.dataset.index });
                                 break;
                         case 1:
-                                this.get_plugin_list(e.currentTarget.dataset.index);
-                                this.setData({ environment_index: e.currentTarget.dataset.index });
+                                switch (e.currentTarget.dataset.index) {
+                                        case 0:
+                                                this.get_total_all();
+                                                break;
+                                        case 1:
+                                                this.get_config();
+                                                break;
+                                        case 2:
+                                                this.get_safe_site();
+                                                break;
+                                        case 3:
+                                                this.get_safe_logs();
+                                                break;
+                                        case 4:
+                                                this.get_gl_logs();
+                                                break;
+                                }
+                                this.setData({ firewall_index: e.currentTarget.dataset.index });
                                 break;
-                        case 3:
+                        case 2:
                                 switch (e.currentTarget.dataset.index) {
                                         case 0:
                                                 this.get_task_list();
@@ -199,8 +203,23 @@ Page({
                                 }
                                 this.setData({ task_index: e.currentTarget.dataset.index });
                                 break;
-                        case 4:
-                                switch (e.currentTarget.dataset.index) {
+                        case 3:
+                                this.get_plugin_list(e.currentTarget.dataset.index);
+                                this.setData({ environment_index: e.currentTarget.dataset.index });
+                                break;
+                }
+        },
+        // 下拉刷新
+        onPullDownRefresh: function () {
+                let index = parseInt(this.data.index_cut);
+                switch (index) {
+                        case 0:
+                                if (this.data.monitor_index != -1 || (this.data.monitor_index == -1 && this.data.end_date && this.data.start_date)) {
+                                        this.serverInfoApi(this.data.sid, { stype: this.data.monitor_index, model: 'ajax', action: 'loadInfo', start: this.data.start_date, end: this.data.end_date, }, 'loadInfo')
+                                }
+                                break;
+                        case 1:
+                                switch (this.data.task_index) {
                                         case 0:
                                                 this.get_total_all();
                                                 break;
@@ -217,7 +236,37 @@ Page({
                                                 this.get_gl_logs();
                                                 break;
                                 }
-                                this.setData({ firewall_index: e.currentTarget.dataset.index });
+                                break;
+                        case 2:
+                                switch (this.data.task_index) {
+                                        case 0:
+                                                this.get_task_list();
+                                                break;
+                                        case 1:
+                                                this.get_run_list();
+                                                break;
+                                        case 2:
+                                                this.get_service_list();
+                                                break;
+                                        case 3:
+                                                this.get_network_list();
+                                                break;
+                                        case 4:
+                                                this.get_user_list();
+                                                break;
+                                        case 5:
+                                                this.get_cron_list();
+                                                break;
+                                        case 6:
+                                                this.get_who_list();
+                                                break;
+                                }
+                                break;
+                        case 3:
+                                this.get_plugin_list(this.data.environment_index);
+                                break;
+                        case 4:
+                                this.get_site_list();
                                 break;
                 }
         },
@@ -229,11 +278,12 @@ Page({
                         charts.loading(item)
                 });
         },
-
+        // 监控
         serverInfoApi: function (sid, pdata, saveName) {
                 wx.setNavigationBarTitle({ title: '宝塔面板-监控列表' })
                 app.http({
                         id: sid,
+                        load: false,
                         data: pdata
                 }).then(res => {
                         this.data.saveName = res;
@@ -285,15 +335,16 @@ Page({
         get_plugin_list: function (index) {
                 wx.setNavigationBarTitle({ title: '宝塔面板-环境状态' });
                 let _this = this;
+                console.log(this.data.plugin_list);
                 app.http({
                         id: this.data.sid,
+                        load: this.data.plugin_list.length == 0?true:false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'getPluginList',
                                 type: '1'
                         }
                 }).then(res => {
-                        console.log(res);
                         let res_data = res.data;
                         let res_arry = [];
                         this.data.plugin_list = [];
@@ -442,7 +493,7 @@ Page({
         get_task_list: function () {
                 wx.setNavigationBarTitle({ title: '宝塔面板-任务管理' });
                 let _this = this;
-                app.showLoading('加载中...')
+                this.data.course_list.length == 0 ? app.showLoading('加载中...') : '',
                 wx.request({
                         url: app.server + '/?mod=send_panel',
                         data: {
@@ -477,6 +528,9 @@ Page({
                         fail: function (res) { },
                         complete: function (res) {
                                 wx.hideLoading();
+                                // 下拉 不添加任何动作处理
+                                wx.stopPullDownRefresh() //停止下拉刷新
+                                wx.hideNavigationBarLoading() //完成停止加载
                         },
                 })
         },
@@ -485,6 +539,7 @@ Page({
         get_run_list: function () {
                 app.http({
                         id: this.data.sid,
+                        load: this.data.run_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -503,6 +558,7 @@ Page({
         get_service_list: function () {
                 app.http({
                         id: this.data.sid,
+                        load: this.data.service_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -521,6 +577,7 @@ Page({
         get_network_list: function () {
                 app.http({
                         id: this.data.sid,
+                        load: this.data.network_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -539,6 +596,7 @@ Page({
         get_user_list: function () {
                 app.http({
                         id: this.data.sid,
+                        load: this.data.user_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -556,6 +614,7 @@ Page({
         get_cron_list: function () {
                 app.http({
                         id: this.data.sid,
+                        load: this.data.cron_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -573,6 +632,7 @@ Page({
         get_who_list: function () {
                 app.http({
                         id: this.data.sid,
+                        load: this.data.who_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -591,6 +651,7 @@ Page({
                 wx.setNavigationBarTitle({ title: '宝塔面板-网站管理' })
                 app.http({
                         id: this.data.sid,
+                        load: this.data.sites_list.length == 0 ? true : false,
                         data: {
                                 model: 'data',
                                 action: 'getData',
@@ -676,11 +737,11 @@ Page({
                 })
         },
 
-        // 获取防火墙详情
+        // 获取防火墙—概览
         get_total_all: function () {
                 wx.setNavigationBarTitle({ title: '宝塔面板-防火墙' });
                 let _this = this;
-                app.showLoading('加载中...')
+                this.data.btwaf_total_all == null ? app.showLoading('加载中...'):'';
                 wx.request({
                         url: app.server + '/?mod=send_panel',
                         data: {
@@ -752,45 +813,13 @@ Page({
                         }
                 });
         },
-        // 配置开关状态
-        set_config_state:function(e){
-                let    state = e.currentTarget.dataset.state,
-                        obj = e.currentTarget.dataset.obj,
-                        server = e.currentTarget.dataset.server,
-                        tip = '确定要' + (state ? '暂停' : '开启') + server +'吗？';
-                wx.showModal({
-                        title: (state ? '暂停' : '开启') + '--' + server,
-                        content: tip,
-                        success: sm => {
-                                if (sm.confirm) {
-                                        app.http({
-                                                id: this.data.sid,
-                                                data: {
-                                                        model: 'panelPlugin',
-                                                        action: 'a',
-                                                        mod_name: 'btwaf',
-                                                        mod_s: 'set_obj_open',
-                                                        obj:obj
-                                                }
-                                        }).then(res => {
-                                                if (res.status) {
-                                                        this.data.btwaf_config[obj].open = !this.data.btwaf_config[obj].open;
-                                                        this.setData({
-                                                                btwaf_config: this.data.btwaf_config
-                                                        });
-                                                }
-                                                app.showReturnInfo(res.status, res.msg, res.status ? res.msg : '提示');
-                                        });
-                                } else {
-                                        this.setData({ btwaf_config: this.data.btwaf_config});
-                                }
-                        }
-                });
-        },
-        // 获取配置信息
+
+
+        // 获取全局配置
         get_config:function(){
                 app.http({
                         id: this.data.sid,
+                        load: this.data.btwaf_config == null ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -804,11 +833,48 @@ Page({
                         })
                 });
         },
-        // 获取日志
+
+        // 设置全局配置—开关
+        set_config_state: function (e) {
+                let state = e.currentTarget.dataset.state,
+                        obj = e.currentTarget.dataset.obj,
+                        server = e.currentTarget.dataset.server,
+                        tip = '确定要' + (state ? '暂停' : '开启') + server + '吗？';
+                wx.showModal({
+                        title: (state ? '暂停' : '开启') + '--' + server,
+                        content: tip,
+                        success: sm => {
+                                if (sm.confirm) {
+                                        app.http({
+                                                id: this.data.sid,
+                                                data: {
+                                                        model: 'panelPlugin',
+                                                        action: 'a',
+                                                        mod_name: 'btwaf',
+                                                        mod_s: 'set_obj_open',
+                                                        obj: obj
+                                                }
+                                        }).then(res => {
+                                                if (res.status) {
+                                                        this.data.btwaf_config[obj].open = !this.data.btwaf_config[obj].open;
+                                                        this.setData({
+                                                                btwaf_config: this.data.btwaf_config
+                                                        });
+                                                }
+                                                app.showReturnInfo(res.status, res.msg, res.status ? res.msg : '提示');
+                                        });
+                                } else {
+                                        this.setData({ btwaf_config: this.data.btwaf_config });
+                                }
+                        }
+                });
+        },
+
+        // 获取防火墙-操作日志
         get_gl_logs:function(){
                 app.http({
                         id: this.data.sid,
-                        load: this.data.btwaf_gl_logs_page == 1 ? true : false,
+                        load: this.data.btwaf_gl_logs == null ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -835,15 +901,14 @@ Page({
                                         btwaf_loadingComplete: true
                                 })
                         }
-                        // this.setData({
-                        //         btwaf_gl_logs: res.data
-                        // })
                 });
         },
-        // 获取站点
+
+        // 获取站点配置
         get_safe_site:function(){
                 app.http({
                         id: this.data.sid,
+                        load: this.data.btwaf_site == null ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -856,6 +921,7 @@ Page({
                         })
                 });
         },
+
         // 设置站点开关
         set_config_site:function(e){
                 let state = e.currentTarget.dataset.state,
@@ -890,12 +956,13 @@ Page({
                         }
                 });
         },
+
         // 获取封锁历史
         get_safe_logs:function(){
-                console.log(this.data.btwaf_safe_logs_page);
+                console.log(this.data.btwaf_safe_logs);
                 app.http({
-                        load: this.data.btwaf_safe_logs_page == 1?true: false,
                         id: this.data.sid,
+                        load: this.data.btwaf_safe_logs.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -924,6 +991,7 @@ Page({
                         }
                 });
         },
+        
         // 解封IP
         set_safe_drop_ip:function(){
                 wx.showModal({
@@ -949,6 +1017,7 @@ Page({
                         }
                 });
         },
+
         // 解封指定ip
         set_safe_uncover_ip:function(e){
                 let ip = e.currentTarget.dataset.ip;
@@ -976,9 +1045,12 @@ Page({
                         }
                 });
         },
+
+        // 全局配置—设置按钮
         set_state:function(){
                 app.showErrorModal('功能开发中，敬请期待。','提示');
         },
+
         // 滚动事件
         safe_logs_scroll_lower: function (e) {
                 console.log('滚动置底')
@@ -990,6 +1062,7 @@ Page({
 
 
         },
+
         // 下拉事件
         gl_logs_scroll_lower:function(e){
                 if (this.data.btwaf_loading && !this.data.btwaf_loadingComplete) {
@@ -998,68 +1071,4 @@ Page({
                         this.get_gl_logs();
                 }
         },
-        // 下拉刷新
-        onPullDownRefresh: function () {
-                let index = parseInt(this.data.index_cut);
-                switch (index) {
-                        case 0:
-                                if (this.data.monitor_index != -1 || (this.data.monitor_index == -1 && this.data.end_date && this.data.start_date)) {
-                                        this.serverInfoApi(this.data.sid, { stype: this.data.monitor_index, model: 'ajax', action: 'loadInfo', start: this.data.start_date, end: this.data.end_date, }, 'loadInfo')
-                                }
-                                break;
-                        case 1:
-                                this.get_plugin_list(this.data.environment_index);
-                                break;
-                        case 2:
-                                this.get_site_list();
-                                break;
-                        case 3:
-                                switch (this.data.task_index) {
-                                        case 0:
-                                                this.get_task_list();
-                                                break;
-                                        case 1:
-                                                this.get_run_list();
-                                                break;
-                                        case 2:
-                                                this.get_service_list();
-                                                break;
-                                        case 3:
-                                                this.get_network_list();
-                                                break;
-                                        case 4:
-                                                this.get_user_list();
-                                                break;
-                                        case 5:
-                                                this.get_cron_list();
-                                                break;
-                                        case 6:
-                                                this.get_who_list();
-                                                break;
-                                }
-                                break;
-                        case 4:
-                                switch (this.data.task_index) {
-                                        case 0:
-                                                this.get_total_all();
-                                                break;
-                                        case 1:
-                                                this.get_config();
-                                                break;
-                                        case 2:
-                                                this.get_safe_site();
-                                                break;
-                                        case 3:
-                                                this.get_safe_logs();
-                                                break;
-                                        case 4:
-                                                this.get_gl_logs();
-                                                break;
-                                }
-                                break;
-                }
-                // 下拉 不添加任何动作处理
-                wx.stopPullDownRefresh() //停止下拉刷新
-                wx.hideNavigationBarLoading() //完成停止加载
-        }
 })
