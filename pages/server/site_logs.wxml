@@ -1,0 +1,25 @@
+<!-- <view class=''>选择日期：</view> -->
+
+<view class='firewall_body list'>
+        <view class='body_list' wx:for="{{site_logs_list}}" wx:key="index" style='margin-top:8rpx;' bindtap="logs_details_view"  data-index="{{index}}" >
+                <view class='list-head' style=''>
+                        <text>{{ item[0] }}</text>
+                        <text>类型 : {{item[2]}}</text>
+                        <text>状态 : <text style='color:#888'>已拦截</text></text>
+                </view>
+                <view class='list-left'>
+                        <view class='list-item'>
+                                <text>IP : {{item[1]}}</text>
+                                
+                        </view>
+                        <view class='list-item' style='font-size:28rpx;margin-top:15rpx;display:flex;justify-content: space-between'>
+                                <text>url : {{item[3]}}</text>
+                        </view>
+                </view>
+                <view class='list-right'>
+
+                </view>
+        </view>
+        <view class="loading" hidden="{{!btwaf_loading}}"><image src='../../img/logo/icon-loading.gif'></image>正在载入更多...</view>
+        <view class="loading complete" hidden="{{!btwaf_loadingComplete}}">已加载全部</view>
+</view>

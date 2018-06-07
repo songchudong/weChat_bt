@@ -2,14 +2,13 @@
 App({
       // 小程序初始化
       onLaunch: function () {
-            console.log();
             // 展示本地存储能力
             this.globalData.token = wx.getStorageSync('token');
             this.globalData.userInfo = wx.getStorageSync('userinfo');
             this.globalData.serverList = wx.getStorageSync('serverList');
             console.log(this.globalData.serverList );
             if (!this.globalData.token || !this.globalData.userInfo) {
-                  this.getLogin();
+                    this.removeLoginCache();
             }
             console.log('小程序初始化成功');
       },
@@ -119,9 +118,6 @@ App({
                               reject(res);
                         }, complete: () => {
                               obj.load == undefined || obj.load ? wx.hideLoading() : '';
-                              // 下拉 不添加任何动作处理
-                              wx.stopPullDownRefresh() //停止下拉刷新
-                              wx.hideNavigationBarLoading() //完成停止加载
                         }
                   });
             });

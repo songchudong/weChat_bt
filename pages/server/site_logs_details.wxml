@@ -1,0 +1,55 @@
+<!--pages/server/site_logs_details.wxml-->
+<wxs module="filters" src="../../filter/common.wxs"></wxs>
+
+<view class='list_box'>
+        <view class='box_title'>【2018-05-29】站点防御日志详情</view>
+        <view class="box_conter">
+                <view class='par_list'>
+                        <view class='par_name'>站点</view>
+                        <view class='par_data'>{{site_name}}</view>
+                </view>
+                <view class='par_list'>
+                        <view class='par_name'>用户IP</view>
+                        <view class='par_data'>{{logs_arry[1]}}</view>
+                </view>
+                <view class='par_list'>
+                        <view class='par_name'>类型</view>
+                        <view class='par_data'>{{logs_arry[2]}}</view>
+                </view>
+                <view class='par_list'>
+                        <view class='par_name'>过滤器</view>
+                        <view class='par_data'>{{logs_arry[5]}}</view>
+                </view>
+        </view>
+</view>
+
+<view class='list_box'>
+        <view class='box_title'>URL地址</view>
+        <view class="box_conter">
+                <view class='par_list'>{{logs_arry[3]}}</view>
+        </view>
+</view>
+<view class='list_box'>
+        <view class='box_title'>User-Agent</view>
+        <view class="box_conter">
+                <view class='par_list'>{{logs_arry[4]}}</view>
+        </view>
+</view>
+<view class='list_box'>
+        <view class='box_title'>过滤规则</view>
+        <view class="box_conter">
+                <view class='par_list' style='word-wrap: break-word;display:block;'>{{logs_arry[6]}}</view>
+        </view>
+</view>
+<view class='list_box'>
+        <view class='box_title'>传入值</view>
+        <view class="box_conter">
+                <view class='par_list'>{{logs_arry[7] != undefined ?logs_arry[7]:'空'}}</view>
+        </view>
+</view>
+<view class='list_box'>
+        <view class='box_title'>风险值</view>
+        <view class="box_conter">
+                <view class='par_list'>{{logs_arry[8] != undefined ?logs_arry[8]:'空'}}</view>
+        </view>
+</view>

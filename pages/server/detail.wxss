@@ -674,8 +674,8 @@ page {
 }
 
 .weui-cell {
-        height: 70rpx;
-        line-height: 70rpx;
+        height: 60rpx;
+        line-height: 60rpx;
         padding: 15rpx 35rpx; 
         position: relative;
         display: -webkit-box;
@@ -691,6 +691,7 @@ page {
         -webkit-flex: 1;
         flex: 1;
         font-size: 31rpx;
+        color: #353535;
 }
 .weui-cell__bd button{
         position: absolute;
@@ -782,6 +783,7 @@ switch {
         font-weight: 500;
         margin-bottom: 15rpx;
         text-transform: uppercase;
+        color: #777;
 }
 .firewall_body .list_conter .list_fiex text{
         margin:0 10rpx;
@@ -804,14 +806,14 @@ switch {
 
 .firewall_body .conter_box_one {
         color: #3c763d;
-        background: #dff0d8;
+        background-color: #dff0d8;
         border: 1rpx solid #d6e9c6;
 }
 
 .firewall_body .conter_box_two {
         color: #31708f;
         background-color: #d9edf7;
-        border-color: #bce8f1;
+        border:1rpx solid  #bce8f1;
         margin-right: 0;
 }
 .firewall_body .body_list{
@@ -821,17 +823,17 @@ switch {
         color: #353535;
 }
 .btwaf_site .firewall_body .body_list{
-        margin-top:5rpx;
+        margin-top:8rpx;
         padding-bottom:15rpx; 
 }
 .firewall_body .body_list .list_title{
         /* margin-bottom: 25rpx; */
         display: flex;
         justify-content:space-between;
+        color: #353535;
 }
 .firewall_body .body_list .list_name{
         font-size: 28rpx;
-        color: #353535;
         display: inline-block;
         font-weight: 500; 
 }
@@ -853,6 +855,7 @@ switch {
 .firewall_body .body_list  .list_open view{
         display: inline-block;
         margin-right: 25rpx;
+        color: #666;
 }
 /*swtich整体大小*/
 

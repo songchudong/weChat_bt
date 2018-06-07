@@ -26,7 +26,6 @@ Page({
         },
         //生命周期函数--监听页面加载
         onLoad: function (options) {
-                console.log(app.globalData.serverList)
                 if (app.globalData.serverList == '') {
                         this.setData({ isNeedRefresh: true });
                 } else {
@@ -89,8 +88,9 @@ Page({
                                                 this.get_server_list();
                                         });
                                 }
-                                if (res.status === false){
-                                        app.showErrorModal('登录状态已过期，下拉重新获取状态', '提示');
+                                if (res.data.status === false){
+                                        app.removeLoginCache();
+                                        this.get_server_list();
                                 }
                         },
                         complete: function () {

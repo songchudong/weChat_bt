@@ -42,7 +42,7 @@ Page({
                         { name: '会话', index: 6 }
                 ],
                 firewall_list: [
-                        { name: '概览', index: 0 },
+                        { name: '统计', index: 0 },
                         { name: '全局配置', index: 1 },
                         { name: '站点配置', index: 2 },
                         { name: '封锁历史', index: 3 },
@@ -117,7 +117,26 @@ Page({
                 // 获取监控数据
                 this.serverInfoApi(this.data.sid, { stype: 0, model: 'ajax', action: 'loadInfo' }, 'loadInfo');
         },
-        // 切换分类
+
+
+        onReachBottom:function(){
+                if (this.data.index_cut == 1 || this.data.index_cut == 2){
+                        if (this.data.firewall_index == 3){
+                                if (this.data.btwaf_loading && !this.data.btwaf_loadingComplete) {
+                                        this.data.btwaf_safe_logs_page = this.data.btwaf_safe_logs_page + 1,  //每次触发上拉事件，把searchPageNum+1  
+                                                this.data.is_initial = false
+                                        this.get_safe_logs();
+                                }
+                        } else if (this.data.firewall_index == 4){
+                                if (this.data.btwaf_loading && !this.data.btwaf_loadingComplete) {
+                                        this.data.btwaf_gl_logs_page = this.data.btwaf_gl_logs_page + 1,  //每次触发上拉事件，把searchPageNum+1  
+                                                this.data.is_initial = false
+                                        this.get_gl_logs();
+                                }
+                        }
+                }
+        },
+        // 切换一级分类
         tab_lord_cut: function (e) {
                 console.log(e);
                 switch (e.target.id) {
@@ -147,7 +166,7 @@ Page({
                 });
         },
 
-        // 切换分类-类型
+        // 切换二级分类
         tabCut: function (e) {
                 let index = parseInt(this.data.index_cut);
                 switch (index) {
@@ -209,7 +228,8 @@ Page({
                                 break;
                 }
         },
-        // 下拉刷新
+
+        // 全部页面下拉刷新
         onPullDownRefresh: function () {
                 let index = parseInt(this.data.index_cut);
                 switch (index) {
@@ -269,6 +289,9 @@ Page({
                                 this.get_site_list();
                                 break;
                 }
+                // 下拉 不添加任何动作处理
+                wx.stopPullDownRefresh() //停止下拉刷新
+                wx.hideNavigationBarLoading() //完成停止加载
         },
 
         // 显示加载中
@@ -278,12 +301,12 @@ Page({
                         charts.loading(item)
                 });
         },
-        // 监控
+
+        // 监控管理
         serverInfoApi: function (sid, pdata, saveName) {
                 wx.setNavigationBarTitle({ title: '宝塔面板-监控列表' })
                 app.http({
                         id: sid,
-                        load: false,
                         data: pdata
                 }).then(res => {
                         this.data.saveName = res;
@@ -295,7 +318,7 @@ Page({
                 });
         },
 
-        // 设置开始时间
+        //监控管理-设置开始时间
         setStartDate: function (e) {
                 console.log('setStartDate', e.detail.value, e.target.id)
                 console.log(e.detail.value, this.data.end_date)
@@ -313,7 +336,7 @@ Page({
                         'loadInfo');
         },
 
-        // 设置结束时间
+        // 监控管理-设置结束时间
         setEndDate: function (e) {
                 console.log('setEndDate', e.detail.value, e.target.id)
                 console.log(this.data.start_date, e.detail.value)
@@ -331,14 +354,12 @@ Page({
                         'loadInfo')
         },
 
-        // 获取环境插件
+        // 获取环境插件列表
         get_plugin_list: function (index) {
                 wx.setNavigationBarTitle({ title: '宝塔面板-环境状态' });
                 let _this = this;
-                console.log(this.data.plugin_list);
                 app.http({
                         id: this.data.sid,
-                        load: this.data.plugin_list.length == 0?true:false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'getPluginList',
@@ -539,7 +560,6 @@ Page({
         get_run_list: function () {
                 app.http({
                         id: this.data.sid,
-                        load: this.data.run_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -558,7 +578,6 @@ Page({
         get_service_list: function () {
                 app.http({
                         id: this.data.sid,
-                        load: this.data.service_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -577,7 +596,6 @@ Page({
         get_network_list: function () {
                 app.http({
                         id: this.data.sid,
-                        load: this.data.network_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -596,7 +614,6 @@ Page({
         get_user_list: function () {
                 app.http({
                         id: this.data.sid,
-                        load: this.data.user_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -614,7 +631,6 @@ Page({
         get_cron_list: function () {
                 app.http({
                         id: this.data.sid,
-                        load: this.data.cron_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -632,7 +648,6 @@ Page({
         get_who_list: function () {
                 app.http({
                         id: this.data.sid,
-                        load: this.data.who_list.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -651,7 +666,6 @@ Page({
                 wx.setNavigationBarTitle({ title: '宝塔面板-网站管理' })
                 app.http({
                         id: this.data.sid,
-                        load: this.data.sites_list.length == 0 ? true : false,
                         data: {
                                 model: 'data',
                                 action: 'getData',
@@ -725,6 +739,31 @@ Page({
                 })
         },
 
+        // 跳转站点日志视图
+        site_logs_view:function(e){
+                let site = e.currentTarget.dataset.site;
+                app.http({
+                        id: this.data.sid,
+                        data: {
+                                model: 'panelPlugin',
+                                action: 'a',
+                                mod_name: 'btwaf',
+                                mod_s: 'get_logs_list',
+                                siteName: site
+                        }
+                }).then(res => {
+                        if (res.length > 0) {
+                                wx.navigateTo({
+                                        url: '/pages/server/site_logs?site=' + site + '&sid=' + this.data.sid,
+                                        fail: function (res) {
+                                                app.showErrorModal('页面加载失败');
+                                        }
+                                })
+                        }else{
+                                app.showReturnInfo(false,'暂无日志记录','提示');
+                        }
+                });
+        },
 
         // 跳转进程详情
         curse_view: function (e) {
@@ -741,7 +780,7 @@ Page({
         get_total_all: function () {
                 wx.setNavigationBarTitle({ title: '宝塔面板-防火墙' });
                 let _this = this;
-                this.data.btwaf_total_all == null ? app.showLoading('加载中...'):'';
+                app.showLoading('加载中...');
                 wx.request({
                         url: app.server + '/?mod=send_panel',
                         data: {
@@ -814,12 +853,10 @@ Page({
                 });
         },
 
-
         // 获取全局配置
         get_config:function(){
                 app.http({
                         id: this.data.sid,
-                        load: this.data.btwaf_config == null ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -874,7 +911,6 @@ Page({
         get_gl_logs:function(){
                 app.http({
                         id: this.data.sid,
-                        load: this.data.btwaf_gl_logs == null ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -908,7 +944,6 @@ Page({
         get_safe_site:function(){
                 app.http({
                         id: this.data.sid,
-                        load: this.data.btwaf_site == null ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -956,13 +991,11 @@ Page({
                         }
                 });
         },
-
         // 获取封锁历史
         get_safe_logs:function(){
                 console.log(this.data.btwaf_safe_logs);
                 app.http({
                         id: this.data.sid,
-                        load: this.data.btwaf_safe_logs.length == 0 ? true : false,
                         data: {
                                 model: 'panelPlugin',
                                 action: 'a',
@@ -1049,26 +1082,5 @@ Page({
         // 全局配置—设置按钮
         set_state:function(){
                 app.showErrorModal('功能开发中，敬请期待。','提示');
-        },
-
-        // 滚动事件
-        safe_logs_scroll_lower: function (e) {
-                console.log('滚动置底')
-                if (this.data.btwaf_loading && !this.data.btwaf_loadingComplete){
-                        this.data.btwaf_safe_logs_page = this.data.btwaf_safe_logs_page + 1,  //每次触发上拉事件，把searchPageNum+1  
-                        this.data.is_initial = false
-                        this.get_safe_logs();
-                }
-
-
-        },
-
-        // 下拉事件
-        gl_logs_scroll_lower:function(e){
-                if (this.data.btwaf_loading && !this.data.btwaf_loadingComplete) {
-                        this.data.btwaf_gl_logs_page = this.data.btwaf_gl_logs_page + 1,  //每次触发上拉事件，把searchPageNum+1  
-                        this.data.is_initial = false
-                        this.get_gl_logs();
-                }
         },
 })
