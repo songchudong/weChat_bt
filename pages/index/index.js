@@ -28,6 +28,7 @@ Page({
         onLoad: function (options) {
                 if (app.globalData.serverList == '') {
                         this.setData({ isNeedRefresh: true });
+                        app.showLoading('初始化加载...');
                 } else {
                         this.setData({ serverList: app.globalData.serverList, isNeedRefresh: true });
                 }
@@ -49,13 +50,13 @@ Page({
                 app.isBlind(function () {
                         wx.showNavigationBarLoading(); //在标题栏中显示加载
                         app.removeLoginCache(() => {
+                                _this.data.percent = 95;
                                 _this.get_server_list();
                         })
                 });
         },
         // 分享宝塔面板 -- 系统事件
         onShareAppMessage: function (options) {
-                // console.log(options);
                 return {
                         title: '宝塔面板',
                         imageUrl: "/img/bt.png",
@@ -78,7 +79,6 @@ Page({
                                         this.data.isNeedRefresh = true;
                                         this.setData({ serverList: this.data.serverList });
                                         this.get_panel_info();
-                                        this.get_panel_switch();
                                         wx.stopPullDownRefresh() //停止下拉刷新
                                         wx.hideNavigationBarLoading() //完成停止加载 
                                         app.globalData.serverList = this.data.serverList;
@@ -88,7 +88,7 @@ Page({
                                                 this.get_server_list();
                                         });
                                 }
-                                if (res.data.status === false){
+                                if (res.data.status === false) {
                                         app.removeLoginCache();
                                         this.get_server_list();
                                 }
@@ -102,10 +102,10 @@ Page({
         get_panel_info: function () {
                 let serverList = this.data.serverList.server, length = serverList.length, _this = this, i = 0;
                 function req() {
-                        if (!_this.data.isNeedRefresh) {
-                                return false
-                        }
                         if (i < length) {
+                                if (!_this.data.isNeedRefresh) {
+                                        return false
+                                }
                                 wx.request({
                                         url: app.server + '/?mod=send_panel',
                                         method: 'POST',
@@ -129,20 +129,19 @@ Page({
                                                 if (i == length - 1) {
                                                         wx.setStorageSync('serverList', _this.data.serverList);
                                                         _this.setData({ percent: 100 });
-                                                        if (_this.data.isNeedRefresh) {
-                                                                setTimeout(function () {
-                                                                        _this.get_panel_info();
-                                                                }, 3000)
+                                                        wx.hideLoading();
+                                                        // if (_this.data.isNeedRefresh) {
+                                                        //         setTimeout(function () {
+                                                        //                 _this.get_panel_info();
+                                                        //         }, 3000)
                                                                 return false;
-                                                        }
+                                                        // }
                                                 }
                                         },
                                         fail: function (res) { },
                                         complete: function (res) {
                                                 i++;
-                                                setTimeout(function () {
-                                                        req();
-                                                }, 1000)
+                                                req();
                                         },
                                 });
                         } else {
@@ -435,11 +434,9 @@ Page({
                         serverList: that.data.serverList
                 })
         },
-
         // 计算滑动角度
         angle: function (start, end) {
-                let _X = end.X - start.X,
-                        _Y = end.Y - start.Y
+                let _X = end.X - start.X, _Y = end.Y - start.Y
                 //返回角度 /Math.atan()返回数字的反正切值
                 return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
         },

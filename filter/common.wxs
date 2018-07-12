@@ -1,109 +1,109 @@
 var filters = {
-  formatNumber:function(n) {  
-    n = n.toString()  
-    return n[1] ? n : '0' + n
-  },
-  
-  // 时间戳转时间（包括格式）
-  getDate: function (time, splitStr) {
-    if (!time) return '';
-    var date = getDate(time*1000);
-    var formateArr = ['YY', 'MM', 'DD', 'hh', 'mm', 'ss'];
-    var returnArr = [], format = splitStr;
-    returnArr.push(date.getFullYear());
-    returnArr.push(filters.formatNumber(date.getMonth() + 1));
-    returnArr.push(filters.formatNumber(date.getDate()));
-    returnArr.push(filters.formatNumber(date.getHours()));
-    returnArr.push(filters.formatNumber(date.getMinutes()));
-    returnArr.push(filters.formatNumber(date.getSeconds()));
-    for (var i = 0; i < returnArr.length; i++) {
-      format = format.replace(formateArr[i], returnArr[i]);
-    }
-    return format;
-  },
+        formatNumber: function (n) {
+                n = n.toString()
+                return n[1] ? n : '0' + n
+        },
 
-  // 设置小数位
-  toFix: function (value, count) {
-    return value.toFixed(count);
-  },
+        // 时间戳转时间（包括格式）
+        getDate: function (time, splitStr) {
+                if (!time) return '';
+                var date = getDate(time * 1000);
+                var formateArr = ['YY', 'MM', 'DD', 'hh', 'mm', 'ss'];
+                var returnArr = [], format = splitStr;
+                returnArr.push(date.getFullYear());
+                returnArr.push(filters.formatNumber(date.getMonth() + 1));
+                returnArr.push(filters.formatNumber(date.getDate()));
+                returnArr.push(filters.formatNumber(date.getHours()));
+                returnArr.push(filters.formatNumber(date.getMinutes()));
+                returnArr.push(filters.formatNumber(date.getSeconds()));
+                for (var i = 0; i < returnArr.length; i++) {
+                        format = format.replace(formateArr[i], returnArr[i]);
+                }
+                return format;
+        },
 
-  // 设置存储单位
-  formaTunit:function(value){
-    console.log(value);
-    if (value < 1024){
-      return value + 'b';
-    }else{
-      if (value / 1024 < 1024) {
-        return filters.toFix(value / 1024, 2) + 'KB';
-      } else {
-        if(value / 1024 / 1024 < 1024){
-          return filters.toFix(value / 1024 / 1024, 2) + 'MB';
-        }else{
-          return filters.toFix(value / 1024 / 1024 / 1024, 2) + 'GB';
+        // 设置小数位
+        toFix: function (value, count) {
+                return value.toFixed(count);
+        },
+
+        // 设置存储单位
+        formaTunit: function (value) {
+                console.log(value);
+                if (value < 1024) {
+                        return value + 'b';
+                } else {
+                        if (value / 1024 < 1024) {
+                                return filters.toFix(value / 1024, 2) + 'KB';
+                        } else {
+                                if (value / 1024 / 1024 < 1024) {
+                                        return filters.toFix(value / 1024 / 1024, 2) + 'MB';
+                                } else {
+                                        return filters.toFix(value / 1024 / 1024 / 1024, 2) + 'GB';
+                                }
+                        }
+                }
+        },
+        to_max: function (num) {
+                if (num > 10000) {
+                        num = num / 10000;
+                        if (num > 10000) {
+                                num = num / 10000;
+                                return num.toFixed(5) + ' 亿';
+                        }
+                        return num.toFixed(5) + ' 万';
+                }
+                return num;
+        },
+        // 计算负载状态
+        proKeepADecimal: function (value, limit) {
+                if (value) {
+                        value = value * 100 / limit
+                        value = parseInt(value)
+                } else {
+                        value = 0
+                }
+                return value;
+        },
+
+        // 设置流量格式
+        KeepADecimal: function (value) {
+                if (value > 1000) {
+                        value = (value / 1024).toFixed(1) + ' Mb/s'
+                } else if (value > 99) {
+                        value = value.toFixed(0) + 'Kb/s'
+                } else if (value < 0) {
+                        value = '0 Kb/s'
+                } else {
+                        value = value.toFixed(1) + 'Kb/s'
+                }
+                return value;
+        },
+
+        // 判断是否停用，
+        GetLoadColor: function (value, limit) {
+                var new_value = filters.proKeepADecimal(value, limit)
+                if (new_value < 50) {
+                        img_name = ['/img/logo/load_normal.png', 'color:#20a53a']
+                } else if (new_value < 80) {
+                        img_name = ['/img/logo/load_warning.png', 'color:#f0ad4e']
+                } else {
+                        img_name = ['/img/logo/load_danger.png', 'color:red']
+                }
+                return img_name
+        },
+
+        // 返回天数
+        replaceStr: function (str) {
+                return str.replace('钟', '').replace('小', '')
         }
-      }
-    }
-  },
-  to_max:function(num){
-    if(num > 10000) {
-      num = num / 10000;
-      if (num > 10000) {
-        num = num / 10000;
-        return num.toFixed(5) + ' 亿';
-      }
-      return num.toFixed(5) + ' 万';
-    }
-		return num;
-	},
-  // 计算负载状态
-  proKeepADecimal:function (value, limit) {
-    if (value) {
-      value = value * 100 / limit
-      value = parseInt(value)
-    } else {
-      value = 0
-    }
-    return value;
-  },
-
-  // 设置流量格式
-  KeepADecimal:function (value) {
-    if (value > 1000) {
-      value = (value / 1024).toFixed(1) + ' Mb/s'
-    } else if (value > 99) {
-      value = value.toFixed(0) + 'Kb/s'
-    } else if (value) {
-      value = value.toFixed(1) + 'Kb/s'
-    } else {
-      value = '0 Kb/s'
-    }
-    return value
-  },
-
-  // 判断是否停用，
-  GetLoadColor:function (value, limit) {
-    var new_value = filters.proKeepADecimal(value, limit)
-    if (new_value < 50) {
-      img_name = ['/img/logo/load_normal.png', 'color:#20a53a']
-    } else if (new_value < 80) {
-      img_name = ['/img/logo/load_warning.png', 'color:#f0ad4e']
-    } else {
-      img_name = ['/img/logo/load_danger.png', 'color:red']
-    }
-    return img_name
-  },
-
-  // 返回天数
-  replaceStr:function (str) {
-    return str.replace('钟', '').replace('小', '')
-  }
 }
 module.exports = {
-  getDate: filters.getDate,
-  formaTunit: filters.formaTunit,
-  replaceStr: filters.replaceStr,
-  proKeepADecimal: filters.proKeepADecimal,
-  GetLoadColor: filters.GetLoadColor,
-  KeepADecimal: filters.KeepADecimal,
-  to_max: filters.to_max
+        getDate: filters.getDate,
+        formaTunit: filters.formaTunit,
+        replaceStr: filters.replaceStr,
+        proKeepADecimal: filters.proKeepADecimal,
+        GetLoadColor: filters.GetLoadColor,
+        KeepADecimal: filters.KeepADecimal,
+        to_max: filters.to_max
 }

@@ -3,23 +3,21 @@ App({
       // 小程序初始化
       onLaunch: function () {
             // 展示本地存储能力
-            this.globalData.token = wx.getStorageSync('token');
-            this.globalData.userInfo = wx.getStorageSync('userinfo');
-            this.globalData.serverList = wx.getStorageSync('serverList');
-            console.log(this.globalData.serverList );
-            if (!this.globalData.token || !this.globalData.userInfo) {
-                    this.removeLoginCache();
-            }
-            console.log('小程序初始化成功');
+                console.log('小程序初始化');
+                this.globalData.token = wx.getStorageSync('token');
+                this.globalData.userInfo = wx.getStorageSync('userinfo');
+                this.globalData.serverList = wx.getStorageSync('serverList');
+                if (!this.globalData.token || !this.globalData.userInfo) {
+                        console.log('缓存失效,重新登录');
+                        this.removeLoginCache(()=>{});
+                }
       },
       //清除登录缓存
       removeLoginCache: function (fn) {
+        console.log('清除登陆缓存，重新登录');
             wx.removeStorageSync('token')
             this.globalData.token = ''
-            this.getLogin().then(() => {
-                  fn();
-            })
-            console.log('清除登陆缓存，重新登录');
+            this.getLogin().then(() => {fn()})
       },
       // 获取登陆状态
       getLogin: function () {
@@ -33,7 +31,7 @@ App({
                                           success: function (res) {
                                                 _this.globalData.token = res.data.token
                                                 wx.setStorageSync('token', res.data.token)
-                                                console.log("登录", res.data)
+                                                console.log("登录状态", res.data)
                                                 resolve();
                                                 if (res.data.wxUserInfo) {
                                                       _this.globalData.userInfo = {
@@ -52,7 +50,7 @@ App({
                   })
             });
       },
-      /* 验证用户是否绑定宝塔账号 */
+      //验证用户是否绑定宝塔账号 
       isBlind: function (fun) {
             var count = 0
             var _this = this
@@ -63,7 +61,7 @@ App({
                   } else if (_this.globalData.userInfo.bt_info && _this.globalData.userInfo.bt_info.bt_uid == 0) {
                         clearInterval(loginFun);
                         // uid 不存在, 则跳转宝塔账号绑定页面
-                        _this.removeLoginCache();
+                        _this.removeLoginCache(()=>{});
                         console.log('isblind server/login');
                         wx.navigateTo({
                               url: "blind/login"
@@ -108,7 +106,7 @@ App({
                                     if (res.data.status === false) {
                                           reject(res);
                                           this.showErrorModal(res.data.msg || '未知错误', '');
-                                          this.removeLoginCache();
+                                          this.removeLoginCache(()=>{});
                                           return false;
                                     }
                                     resolve(res.data);

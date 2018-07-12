@@ -44,12 +44,12 @@
 <view class='list_box'>
         <view class='box_title'>传入值</view>
         <view class="box_conter">
-                <view class='par_list'>{{logs_arry[7] != undefined ?logs_arry[7]:'空'}}</view>
+                <view class='par_list'>{{logs_arry[7]}}</view>
         </view>
 </view>
 <view class='list_box'>
         <view class='box_title'>风险值</view>
         <view class="box_conter">
-                <view class='par_list'>{{logs_arry[8] != undefined ?logs_arry[8]:'空'}}</view>
+                <view class='par_list'>{{logs_arry[8]}}</view>
         </view>
 </view>

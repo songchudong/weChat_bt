@@ -51,7 +51,7 @@ Page({
                 task_view: null,
                 mask_view: false,
                 plugin_list: [],
-                plugin_view_box: false,
+                plugin_view_box: true,
                 plugin_status: true,
                 plugin_name: null,
                 plugin_index: null,
@@ -77,9 +77,14 @@ Page({
                 btwaf_gl_logs: [],
                 btwaf_safe_logs:[],
                 btwaf_safe_logs_page: 1,
-                 btwaf_loading: false, //"上拉加载"的变量，默认false，隐藏  
-                 btwaf_loadingComplete: false,  //“没有数据”的变量，默认false，隐藏  
-                 is_initial:true//是否初始获取数据
+                btwaf_loading: false, //"上拉加载"的变量，默认false，隐藏  
+                btwaf_loadingComplete: false,  //“没有数据”的变量，默认false，隐藏  
+                is_initial:true,//是否初始获取数据
+                safe_logs_initial:true,
+                sites_initial:false,
+                sites_loading:false,
+                sites_loadingComplete:false,
+                sites_page: 1,
         },
         //生命周期函数--监听页面加载
         onLoad: function (options) {
@@ -118,20 +123,25 @@ Page({
                 this.serverInfoApi(this.data.sid, { stype: 0, model: 'ajax', action: 'loadInfo' }, 'loadInfo');
         },
 
-
         onReachBottom:function(){
-                if (this.data.index_cut == 1 || this.data.index_cut == 2){
+                if (this.data.index_cut == 1 || this.data.index_cut == 2 || this.data.index_cut == 4){
                         if (this.data.firewall_index == 3){
                                 if (this.data.btwaf_loading && !this.data.btwaf_loadingComplete) {
                                         this.data.btwaf_safe_logs_page = this.data.btwaf_safe_logs_page + 1,  //每次触发上拉事件，把searchPageNum+1  
-                                                this.data.is_initial = false
+                                        this.data.safe_logs_initial = false
                                         this.get_safe_logs();
                                 }
                         } else if (this.data.firewall_index == 4){
                                 if (this.data.btwaf_loading && !this.data.btwaf_loadingComplete) {
                                         this.data.btwaf_gl_logs_page = this.data.btwaf_gl_logs_page + 1,  //每次触发上拉事件，把searchPageNum+1  
-                                                this.data.is_initial = false
+                                        this.data.is_initial = false
                                         this.get_gl_logs();
+                                }
+                        }else{
+                                if (this.data.sites_loading && !this.data.sites_loadingComplete) {
+                                        this.data.sites_page = this.data.sites_page + 1,  //每次触发上拉事件，把searchPageNum+1  
+                                        this.data.sites_initial = false
+                                        this.get_site_list();
                                 }
                         }
                 }
@@ -404,46 +414,48 @@ Page({
         // 获取插件状态
         set_plugin: function (e) {
                 let name = e.currentTarget.dataset.name;
-                if (name === "pm2" || name === "docker") {
+                if (name.indexOf('pm2') != -1 || name.indexOf('pdockerm2') != -1) {
                         app.showReturnInfo(false, '该软件未提供操作管理功能', '提示');
                         return false;
                 }
-                if (name === "mongodb" || name === "gitlab") {
+                if (name.indexOf('mongodb') != -1 || name.indexOf('gitlab') != -1) {
                         this.data.plugin_cut = false;
                 } else {
                         this.data.plugin_cut = true;
                 }
+                console.log(e);
                 this.setData({
-                        plugin_view_box: true,
+                        plugin_view_box: !this.data.plugin_view_box,
                         mask_view: true,
-                        plugin_name: name,
-                        plugin_status: e.currentTarget.dataset.status,
+                        plugin_name: name.split('_')[0],
+                        plugin_status: e.currentTarget.dataset.run,
                         plugin_index: e.currentTarget.dataset.index,
                         plugin_version: e.currentTarget.dataset.version,
+                        plugin_images: e.currentTarget.dataset.images,
                         plugin_cut: this.data.plugin_cut
                 });
         },
         // 设置状态
         set_plugin_Service: function (e) {
-                // console.log(e);
+                this.mask_tap();
                 let type = e.currentTarget.dataset.type, loading_tip = '', obj = {};
                 for (let i = 0; i < this.data.plugin_list.length; i++) {
-                        if (this.data.plugin_list[i].name === this.data.plugin_name) {
+                        if (this.data.plugin_name.indexOf(this.data.plugin_list[i].name) != -1) {
                                 // if (this.data.plugin_name === 'mysql') this.data.plugin_name = (this.data.plugin_name + 'd');
                                 if (this.data.plugin_name == 'php') this.data.plugin_name = 'php-fpm-' + this.data.plugin_version.replace('.', '');
                                 console.log(this.data.plugin_name)
                                 switch (type) {
                                         case 'stop':
-                                                loading_tip = '正在停止服务中，请稍后...'
+                                                loading_tip = '服务停止中...'
                                                 break;
                                         case 'start':
-                                                loading_tip = '正在启动服务中，请稍后...'
+                                                loading_tip = '服务启动中...'
                                                 break;
                                         case 'restart':
-                                                loading_tip = '正在重启服务中，请稍后...'
+                                                loading_tip = '服务重启中...'
                                                 break;
                                         case 'reload':
-                                                loading_tip = '正在重载服务中，请稍后...'
+                                                loading_tip = '服务重载中...'
                                 }
                                 switch (this.data.plugin_name) {
                                         case 'gitlab':
@@ -490,13 +502,15 @@ Page({
                                         data: obj
                                 }).then(res => {
                                         app.showReturnInfo(true, '空', res.msg);
+                                        console.log(type);
                                         if (type == "restart") {
-                                                this.data.plugin_list[this.data.plugin_index].plugin_status = true;
+                                                this.data.plugin_list[this.data.plugin_index].run = true;
                                         } else if (type == "stop" || type == "start") {
-                                                this.data.plugin_list[this.data.plugin_index].plugin_status = !this.data.plugin_status;
+                                                this.data.plugin_list[this.data.plugin_index].run = !this.data.plugin_status;
+                                                console.log(this.data.plugin_list);
                                         }
-                                        this.setData({ plugin_status: this.data.plugin_list[this.data.plugin_index].plugin_status, plugin_list: this.data.plugin_list });
-                                })
+                                        this.setData({ plugin_status: this.data.plugin_list[this.data.plugin_index].run, plugin_list: this.data.plugin_list });
+                                });
                                 app.showLoading(loading_tip);
                                 break;
                         }
@@ -505,11 +519,15 @@ Page({
         // 遮罩tap
         mask_tap: function () {
                 this.setData({
-                        plugin_view_box: false,
+                        plugin_view_box: true,
                         mask_view: false,
                 });
         },
-
+        actionSheetbindchange:function(){
+                this.setData({
+                        plugin_view_box:!this.data.plugin_view_box
+                })
+        },
         // 获取进程
         get_task_list: function () {
                 wx.setNavigationBarTitle({ title: '宝塔面板-任务管理' });
@@ -679,9 +697,24 @@ Page({
                                 data: ''
                         }
                 }).then(res => {
-                        this.setData({
-                                sites_list: res.data
-                        })
+                        if (res.data.length != 15) {
+                                this.setData({
+                                        sites_list: res.data,
+                                        sites_loading: false,
+                                        sites_loadingComplete: true
+                                })
+                        } else {
+                                if (this.data.sites_initial) {
+                                        this.data.sites_list = res.data;
+                                } else {
+                                        this.data.sites_list = this.data.sites_list.concat(res.data);
+                                }
+                                this.setData({
+                                        sites_list: this.data.sites_list,
+                                        sites_loading: true,
+                                        sites_loadingComplete: false
+                                })
+                        }
                 });
         },
 
@@ -920,7 +953,13 @@ Page({
                                 p: this.data.btwaf_gl_logs_page
                         }
                 }).then(res => {
-                        if (res.data.length != 0) {
+                        if (res.data.length != 12) {
+                                this.setData({
+                                        btwaf_gl_logs:res.data,
+                                        btwaf_loading: false,
+                                        btwaf_loadingComplete: true
+                                })
+                        } else {
                                 if (this.data.is_initial) {
                                         this.data.btwaf_gl_logs = res.data;
                                 } else {
@@ -930,11 +969,6 @@ Page({
                                         btwaf_gl_logs: this.data.btwaf_gl_logs,
                                         btwaf_loading: true,
                                         btwaf_loadingComplete: false
-                                })
-                        } else {
-                                this.setData({
-                                        btwaf_loading: false,
-                                        btwaf_loadingComplete: true
                                 })
                         }
                 });
@@ -1005,21 +1039,22 @@ Page({
                                 p: this.data.btwaf_safe_logs_page
                         }
                 }).then(res => {
-                        if(res.length !=0){
-                                if (this.data.is_initial){
+                        if(res.length != 14){
+                                this.setData({
+                                        btwaf_safe_logs:res,
+                                        btwaf_loading: false,
+                                        btwaf_loadingComplete: true
+                                })
+                        }else{
+                                if (this.data.safe_logs_initial) {
                                         this.data.btwaf_safe_logs = res;
-                                }else{
+                                } else {
                                         this.data.btwaf_safe_logs = this.data.btwaf_safe_logs.concat(res);
                                 }
                                 this.setData({
                                         btwaf_safe_logs: this.data.btwaf_safe_logs,
-                                        btwaf_loading:true,
-                                        btwaf_loadingComplete:false
-                                })
-                        }else{
-                                this.setData({
-                                        btwaf_loading: false,
-                                        btwaf_loadingComplete:true
+                                        btwaf_loading: true,
+                                        btwaf_loadingComplete: false
                                 })
                         }
                 });

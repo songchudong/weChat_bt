@@ -602,18 +602,65 @@ page {
 .plugin_view {
         position: fixed;
         z-index: 9999;
-        left: 50%;
-        top: 50%;
-        width: 300rpx;
+        box-sizing: border-box;
+        bottom:0;
+        width: 100%;
         height: auto;
-        padding: 30rpx 60rpx;
-        margin-left: -210rpx;
-        margin-top: -40%;
+        font-family: "微软雅黑";
         background: #fff;
-        border-radius: 8rpx;
+}
+.plugin_view .plugin_header{
+        padding: 35rpx 0 15rpx 10%;
+        border-bottom:12rpx solid #f2f2f2; 
+        box-sizing: border-box;
+        height: 180rpx;
+}
+.plugin_view .plugin_icon{
+        display: inline-block;
+        width: 35%;
+        height: 100rpx;
+        text-align: right;
+        padding-right: 15rpx;
+        box-sizing: border-box;
+        vertical-align: middle;
+        overflow:hidden;
+}
+.plugin_view .plugin_icon image{
+       width:120rpx;
+       height:100%;
+}
+.plugin_view .plugin_title{
+        display: inline-block;
+        width: 65%;
+        height: 100rpx;
+        vertical-align: middle;
+        font-size: 28rpx;
+        line-height: 50rpx;
+        padding-left: 20rpx;
+        box-sizing: border-box;
+}
+.plugin_view .plugin_btn{
+        padding: 30rpx 0;
+        text-align: center;
+        font-size: 32rpx;
+        border-bottom: 2rpx solid #f2f2f2;
+}
+.plugin_view .plugin_btn:focus{
+        background-color: #fefefe;
+}
+.plugin_view  .plugin_content{
+        border-bottom:12rpx solid #f2f2f2; 
 }
 
-.plugin_view icon {
+.plugin_view .plugin_fonter{
+        padding: 30rpx 0;
+        text-align: center;
+        font-size: 32rpx;
+}
+
+
+
+/* .plugin_view icon {
         position: absolute;
         right: -20rpx;
         top: -20rpx;
@@ -621,13 +668,12 @@ page {
         border-radius: 50%;
         border: 2px solid #fff;
         box-shadow: 0 0 2rpx 0 #ececec;
-}
+} */
 
 .plugin_status {
         display: flex;
-        font-size: 30rpx;
-        margin-bottom: 30rpx;
-        justify-content: center;
+        /* margin-bottom: 30rpx; */
+        /* justify-content: center; */
         color: #666;
 }
 
@@ -636,16 +682,16 @@ page {
         height: 28rpx;
         display: inline-block;
         margin-left: 10rpx;
-        vertical-align: middle;
+        margin-top: 12rpx;
 }
 
-.plugin_title {
+/* .plugin_title {
         font-size: 32rpx;
         text-align: center;
         padding-bottom: 25rpx;
         margin-bottom: 15rpx;
         border-bottom: 1rpx solid #ececec;
-}
+} */
 
 .set_plugin_group button {
         margin-bottom: 30rpx;

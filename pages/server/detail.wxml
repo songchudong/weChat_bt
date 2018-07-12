@@ -145,7 +145,7 @@
                                         </view>
                                         <view class='body_list'>
                                                 <view class='list_title'>
-                                                        <view class='list_name'>禁止国内访问</view>
+                                                        <view class='list_name'>禁止国外访问</view>
                                                         <view class='list_open'>
                                                                 <switch checked='{{btwaf_config.drop_abroad.open}}' bindtap='set_config_state' data-obj='drop_abroad' data-state='{{btwaf_config.drop_abroad.open}}' data-server='禁止国内访问' />
                                                         </view>
@@ -222,7 +222,7 @@
                                 <view class='firewall_body list'>
                                         <view class='body_list' wx:for="{{btwaf_site}}" wx:key="index">
                                                 <view class='list_title' style='padding-bottom:25rpx;border-bottom:1px dashed #ececec;'>
-                                                        <view class='list_name'>{{item.siteName}}<view class='list_box' style='font-size:28rpx;color:#20a53a;display:inline-block;' bind:tap="site_logs_view" data-site="{{item.siteName}}">(安全日志)</view></view>
+                                                        <view class='list_name'>{{item.siteName}}<view class='list_box' style='font-size:28rpx;color:#20a53a;display:inline-block;' bind:tap="site_logs_view" data-site="{{item.siteName}}"> (拦截日志)</view></view>
                                                         <view class='list_open'>
                                                                 <view>配置开关</view>
                                                                 <switch checked='{{item.open}}' bindtap='set_config_site' data-state="{{item.open}}" data-server='{{item.siteName}}' data-index="{{index}}" />
@@ -235,19 +235,19 @@
                                                         </view>
                                                         <view class='list_fiex'>{{item.total[0].key}}
                                                                 <text>:</text>
-                                                                <text style='color:{{item.total[1].value > 0 ?"#fc6d26":"#aaa"}}'>{{item.total[0].value}}</text>
+                                                                <text style='color:{{item.total[0].value > 0 ?"#fc6d26":"#aaa"}}'>{{item.total[0].value}}</text>
                                                         </view>
                                                         <view class='list_fiex'>{{item.total[3].key}}
                                                                 <text>:</text>
-                                                                <text style='color:{{item.total[1].value > 0 ?"#fc6d26":"#aaa"}}'>{{item.total[3].value}}</text>
+                                                                <text style='color:{{item.total[3].value > 0 ?"#fc6d26":"#aaa"}}'>{{item.total[3].value}}</text>
                                                         </view>
                                                         <view class='list_fiex'>{{item.total[4].key}}
                                                                 <text>:</text>
-                                                                <text style='color:{{item.total[1].value > 0 ?"#fc6d26":"#aaa"}}'>{{item.total[4].value}}</text>
+                                                                <text style='color:{{item.total[4].value > 0 ?"#fc6d26":"#aaa"}}'>{{item.total[4].value}}</text>
                                                         </view>
                                                         <view class='list_fiex'>{{item.total[2].key}}
                                                                 <text>:</text>
-                                                                <text style='color:{{item.total[1].value > 0 ?"#fc6d26":"#aaa"}}'>{{item.total[2].value}}</text>
+                                                                <text style='color:{{item.total[2].value > 0 ?"#fc6d26":"#aaa"}}'>{{item.total[2].value}}</text>
                                                         </view>
                                                 </view>
                                         </view>
@@ -718,7 +718,7 @@
                 <view wx:for="{{environment_list}}" wx:key='item.index' data-index="{{item.index}}" bind:tap="tabCut" class="btn-list-two {{environment_index == item.index?'item':''}}">{{item.name}}</view>
         </view>
         <view class="softs-list">
-                <view wx:for="{{plugin_list}}" wx:key="id" class="softs-box" bindtap="set_plugin" data-name="{{item.name}}" data-status="{{item.run}}" data-version="{{item.version}}" data-index="{{index}}">
+                <view wx:for="{{plugin_list}}" wx:key="id" class="softs-box" bindtap="set_plugin" data-name="{{item.name +'_'+ item.version}}" data-run="{{item.run}}" data-version="{{item.version}}" data-index="{{index}}" data-images="{{'/img/softs_icon/ico-'+ item.name +'.png'}}">
                         <view class="softs-icon">
                                 <image src="{{'/img/softs_icon/ico-'+ item.name +'.png'}}" mode="widthFix" />
                         </view>
@@ -733,9 +733,28 @@
                         </view>
                 </view>
         </view>
-        <view class='plugin_view' wx:if="{{plugin_view_box}}">
-                <icon type="clear" size="22" color='#e64340' bindtap='mask_tap' />
-                <view class='plugin_title'>{{plugin_name}} 管理</view>
+        <!--  -->
+
+        <view class="plugin_view" hidden="{{plugin_view_box}}" bindchange="actionSheetbindchange">
+                <view class="plugin_header">
+                        <view class="plugin_icon"><image mode="widthFix" src="{{plugin_images}}" /></view>
+                        <view class="plugin_title">
+                                <view class="plugin_name">软件名称 : {{plugin_name}}</view>
+                                <view class="plugin_status">
+                                        <block wx:if="{{plugin_status}}"><view>服务状态 : 运行中</view><image src="/img/logo/start_ico.png" mode="widthFix" /></block>
+                                        <block wx:else><view>服务状态 : 已暂停</view><image src="/img/logo/stop_ico.png" mode="widthFix" /></block>
+                                </view>
+                        </view>
+                </view>
+                <view class="plugin_content">
+                        <view class="plugin_btn" data-name ="{{plugin_name}}" data-index="{{plugin_index}}" data-type="start" bindtap="set_plugin_Service"  wx:if="{{!plugin_status}}">启动服务</view>
+                        <view class="plugin_btn" data-name ="{{plugin_name}}" data-index="{{plugin_index}}" data-type="stop" bindtap="set_plugin_Service" wx:else>暂停服务</view>
+                        <view class="plugin_btn" data-name ="{{plugin_name}}" data-type="restart"  bindtap="set_plugin_Service">重启服务</view>
+                        <view class="plugin_btn" data-name ="{{plugin_name}}" data-type="reload"  bindtap="set_plugin_Service" wx:if="{{plugin_cut}}">重载配置</view>
+                </view>
+                <view class="plugin_fonter" bindtap="mask_tap">取消</view>
+                <!-- <icon type="clear" size="22" color='#e64340' bindtap='mask_tap' /> -->
+                <!-- <view class='plugin_title'>{{plugin_name}} 管理</view>
                 <view class='plugin_status'>当前状态：
                         <view wx:if="{{plugin_status}}">开启
                                 <image src="/img/logo/start_ico.png" mode="widthFix" />
@@ -749,7 +768,7 @@
                         <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" data-index="{{plugin_index}}" data-type="start" wx:else>启动</button>
                         <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" data-type="restart">重启</button>
                         <button type="primary" size="default" bindtap="set_plugin_Service" data-name="{{plugin_name}}" wx:if="{{plugin_cut}}" data-type='reload'>重载配置</button>
-                </view>
+                </view> -->
         </view>
 </block>
 
@@ -775,13 +794,13 @@
                                         <text>域名管理</text>
                                 </view>
                                 <!-- <view class='btn_item' bindtap='logs_view' data-index="{{index}}">
-                              <text>日志</text>
-                        </view> -->
+                                        <text>日志</text>
+                                </view> -->
                         </view>
                 </view>
-                <view wx:if="{{sites_list.length > 40}}" class="list-tip" style="background-color:#fff;font-size:25rpx;margin-top:25rpx;color:#666;padding:25rpx;text-align:center;">
-                        当前页面仅支持前40个站点，其余站点请使用网页管理。
+                <view class="loading" hidden="{{!sites_loading}}" style='margin-top:25rpx;'>
+                        <image src='../../img/logo/icon-loading.gif'></image>正在载入更多...
                 </view>
+                <view class="loading complete" hidden="{{!sites_loadingComplete}}" style='margin-top:25rpx;'>已加载全部</view>
         </view>
 </block>
-
